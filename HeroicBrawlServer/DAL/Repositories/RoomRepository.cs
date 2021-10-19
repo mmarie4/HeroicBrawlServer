@@ -24,7 +24,7 @@ namespace HeroicBrawlServer.DAL.Repositories
         /// <returns></returns>
         public async Task<ICollection<Room>> SearchRoomsAsync(string searchTerm, int limit, int offset)
         {
-            if (string.IsNullOrEmpty(searchTerm))
+            if (!string.IsNullOrEmpty(searchTerm))
             {
                 return await Entities
                                 .Where(x => x.Name.Contains(searchTerm))
@@ -39,9 +39,14 @@ namespace HeroicBrawlServer.DAL.Repositories
                              .ToListAsync();
         }
 
+        /// <summary>
+        /// Get total count of rooms by name
+        /// </summary>
+        /// <param name="searchTerm"></param>
+        /// <returns></returns>
         public async Task<int> GetTotalCountAsync(string searchTerm)
         {
-            if (string.IsNullOrEmpty(searchTerm))
+            if (!string.IsNullOrEmpty(searchTerm))
             {
                 return await Entities
                                 .Where(x => x.Name.Contains(searchTerm))
