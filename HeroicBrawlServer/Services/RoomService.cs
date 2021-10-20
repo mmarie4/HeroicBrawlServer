@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using HeroicBrawlServer.DAL.Entities;
 using HeroicBrawlServer.DAL.Repositories.Abstractions;
+using HeroicBrawlServer.Services.Models.Rooms;
 using HeroicBrawlServer.Shared.Models;
 
 namespace HeroicBrawlServer.Services
@@ -26,6 +28,26 @@ namespace HeroicBrawlServer.Services
                 Offset = offset,
                 Total = total
             };
+        }
+
+        public async Task<Room> CreateRoomAsync(CreateRoomParameter parameter, Guid userId)
+        {
+            var room = new Room()
+            {
+                Id = Guid.NewGuid(),
+                Name = parameter.Name,
+                Max = parameter.Max,
+                CreatedBy = userId,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedBy = userId,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            var result = await _roomRepository.AddAsync(room);
+
+            await _roomRepository.SaveAsync();
+
+            return result;
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using HeroicBrawlServer.DAL.Entities;
+using HeroicBrawlServer.Services.Models.Rooms;
 using HeroicBrawlServer.Shared.Models;
 
 namespace HeroicBrawlServer.Services.Abstractions
@@ -7,5 +9,6 @@ namespace HeroicBrawlServer.Services.Abstractions
     public interface IRoomService
     {
         Task<PaginatedList<Room>> GetPaginatedListAsync(string searchTerm, int limit, int offset);
+        Task<Room> CreateRoomAsync(CreateRoomParameter parameter, Guid userId);
     }
 }
