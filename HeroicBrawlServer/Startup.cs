@@ -1,6 +1,10 @@
 using System;
 using System.IO;
 using System.Reflection;
+using HeroicBrawlServer.DAL.Repositories;
+using HeroicBrawlServer.DAL.Repositories.Abstractions;
+using HeroicBrawlServer.Services;
+using HeroicBrawlServer.Services.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +35,14 @@ namespace HeroicBrawlServer
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+            services.AddSignalRCore();
+
+            services.AddScoped<IRoomService, RoomService>();
+
+            services.AddScoped<IRoomRepository, RoomRepository>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +59,10 @@ namespace HeroicBrawlServer
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<ChatHub>("/api/rooms/hub");
+            });
 
             app.UseAuthorization();
 
