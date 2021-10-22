@@ -9,6 +9,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.11" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,8 +26,18 @@
     <Folder Include="DAL\Repositories\" />
     <Folder Include="DAL\Repositories\Abstractions\" />
     <Folder Include="Services\Models\Rooms\" />
+    <Folder Include="Services\Models\Users\" />
+    <Folder Include="API\Models\Users\" />
+    <Folder Include="Shared\Extensions\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <None Remove="Services\Models\Users\" />
+    <None Remove="API\Models\Users\" />
+    <None Remove="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <None Remove="Shared\Extensions\" />
+  </ItemGroup>
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>

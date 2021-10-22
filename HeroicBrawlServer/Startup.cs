@@ -7,6 +7,7 @@ using HeroicBrawlServer.Services;
 using HeroicBrawlServer.Services.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,11 +37,20 @@ namespace HeroicBrawlServer
                 c.IncludeXmlComments(xmlPath);
             });
 
-            services.AddSignalRCore();
+            services.AddSignalR();
 
+            // Db context
+            services.AddDbContext<AppDbContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+            // Services
             services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<IUserService, UserService>();
 
+            // Repositories
             services.AddScoped<IRoomRepository, RoomRepository>();
+            services.AddScoped<IRoomMemberRepository, RoomMemberRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
 
         }
@@ -59,15 +69,12 @@ namespace HeroicBrawlServer
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHub<ChatHub>("/api/rooms/hub");
-            });
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<RealtimeHub>("/api/rooms/hub");
                 endpoints.MapControllers();
             });
         }

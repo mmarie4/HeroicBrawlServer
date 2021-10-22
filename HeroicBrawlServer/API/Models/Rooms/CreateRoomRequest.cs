@@ -9,7 +9,7 @@ namespace HeroicBrawlServer.API.Models.Rooms
 
 
         /// <summary>
-        /// Builds a CreateRoomParameter from a CreateRoomRequest
+        ///     Builds a CreateRoomParameter from a CreateRoomRequest
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

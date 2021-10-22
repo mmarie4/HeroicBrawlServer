@@ -1,14 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using HeroicBrawlServer.API.Models.Rooms;
 using HeroicBrawlServer.Services.Abstractions;
+using HeroicBrawlServer.Shared.Extensions;
 using HeroicBrawlServer.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HeroicBrawlServer.API
 {
-
+    [ApiController]
     [Route("api/rooms")]
+    [Authorize]
     public class RoomController : Controller
     {
         private readonly IRoomService _roomService;
@@ -41,8 +43,7 @@ namespace HeroicBrawlServer.API
         [ProducesResponseType(typeof(RoomResponse), 200)]
         public async Task<RoomResponse> CreateRoom([FromBody] CreateRoomRequest request)
         {
-            // TODO: use token to get userId
-            var userId = Guid.NewGuid();
+            var userId = HttpContext.User.ExtractUserId();
 
             var parameter = CreateRoomRequest.ToParameter(request);
 

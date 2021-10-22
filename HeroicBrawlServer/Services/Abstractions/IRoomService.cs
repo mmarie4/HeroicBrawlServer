@@ -39,6 +39,6 @@ namespace HeroicBrawlServer.Services.Abstractions
         /// <param name="userId"></param>
         /// <param name="roomId"></param>
         /// <returns></returns>
-        Task RemoveMemberFromRoomAsync(Guid userId, Guid roomId)
+        Task RemoveMemberFromRoomAsync(Guid userId, Guid roomId);
     }
 }
