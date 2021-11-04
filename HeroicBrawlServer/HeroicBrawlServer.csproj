@@ -14,12 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="DAL\" />
     <Folder Include="API\Models\" />
     <Folder Include="API\Models\Rooms\" />
     <Folder Include="Services\Abstractions\" />
-    <Folder Include="Services\Models\" />
     <Folder Include="Shared\" />
     <Folder Include="Shared\Models\" />
     <Folder Include="DAL\Entities\" />

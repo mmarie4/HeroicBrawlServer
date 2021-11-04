@@ -69,6 +69,11 @@ namespace HeroicBrawlServer.Services
             return (result, token);
         }
 
+        public async Task<User> GetByIdAsync(Guid userId)
+        {
+            return await _userRepository.GetByIdAsync(userId);
+        }
+
         #region private functions
         /// <summary>
         ///     Hash a password
