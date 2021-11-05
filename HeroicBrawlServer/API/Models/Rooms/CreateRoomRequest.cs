@@ -1,11 +1,17 @@
 ﻿using HeroicBrawlServer.Services.Models.Rooms;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace HeroicBrawlServer.API.Models.Rooms
 {
     public class CreateRoomRequest
     {
+        [Required]
         public string Name { get; set; }
+        [Required]
         public int Max { get; set; }
+        [Required]
+        public Guid MapId { get; set; }
 
 
         /// <summary>
@@ -18,7 +24,8 @@ namespace HeroicBrawlServer.API.Models.Rooms
             return new CreateRoomParameter()
             {
                 Name = request.Name,
-                Max = request.Max
+                Max = request.Max,
+                MapId = request.MapId
             };
         }
     }

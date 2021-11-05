@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HeroicBrawlServer.DAL.Entities
 {
@@ -10,5 +11,8 @@ namespace HeroicBrawlServer.DAL.Entities
 
         [Column("max")]
         public int Max { get; set; }
+
+        [Column("map_id")]
+        public Guid MapId { get; set; }
     }
 }

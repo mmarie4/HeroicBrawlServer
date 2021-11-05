@@ -9,10 +9,11 @@ namespace HeroicBrawlServer.API.Models.Rooms
     {
         public string Name { get; set; }
         public int Max { get; set; }
+        public Guid MapId { get; set; }
 
 
         /// <summary>
-        /// Builds a RoomResponse from a Room entity
+        ///     Builds a RoomResponse from a Room entity
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -23,15 +24,16 @@ namespace HeroicBrawlServer.API.Models.Rooms
                 Id = entity.Id,
                 Max = entity.Max,
                 Name = entity.Name,
+                MapId = entity.MapId,
                 CreatedAt = entity.CreatedAt,
-                CreatedBy = entity.CreatedBy,
-                UpdatedBy = entity.UpdatedBy,
-                UpdatedAt = entity.UpdatedAt
+                CreatedBy = entity.CreatedBy?.Pseudo,
+                UpdatedAt = entity.UpdatedAt,
+                UpdatedBy = entity.UpdatedBy?.Pseudo,
             };
         }
 
         /// <summary>
-        /// Builds RoomResponse for each item of a Room entities collection
+        ///     Builds RoomResponse for each item of a Room entities collection
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>

@@ -40,9 +40,9 @@ namespace HeroicBrawlServer.Services
                 Id = Guid.NewGuid(),
                 Name = parameter.Name,
                 Max = parameter.Max,
-                CreatedBy = userId,
+                CreatedById = userId,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedBy = userId,
+                UpdatedById = userId,
                 UpdatedAt = DateTime.UtcNow
             };
 
@@ -60,9 +60,9 @@ namespace HeroicBrawlServer.Services
                 Id = Guid.NewGuid(),
                 UserId = userId,
                 RoomId = roomId,
-                CreatedBy = userId,
+                CreatedById = userId,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedBy = userId,
+                UpdatedById = userId,
                 UpdatedAt = DateTime.UtcNow
             };
 

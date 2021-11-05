@@ -16,7 +16,7 @@ namespace HeroicBrawlServer.DAL.Repositories
 
 
         /// <summary>
-        /// Search rooms by name
+        ///     Search rooms by name
         /// </summary>
         /// <param name="searchTerm"></param>
         /// <param name="limit"></param>
@@ -27,20 +27,24 @@ namespace HeroicBrawlServer.DAL.Repositories
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 return await Entities
-                                .Where(x => x.Name.Contains(searchTerm))
+                                .Include(x => x.CreatedBy)
+                                .Include(x => x.UpdatedBy)
+                                .Where(x => x.Name.ToLower().Contains(searchTerm.ToLower()))
                                 .Skip(offset)
                                 .Take(limit)
                                 .ToListAsync();
             }
 
             return await Entities
+                             .Include(x => x.CreatedBy)
+                             .Include(x => x.UpdatedBy)
                              .Skip(offset)
                              .Take(limit)
                              .ToListAsync();
         }
 
         /// <summary>
-        /// Get total count of rooms by name
+        ///     Get total count of rooms by name
         /// </summary>
         /// <param name="searchTerm"></param>
         /// <returns></returns>
@@ -49,7 +53,7 @@ namespace HeroicBrawlServer.DAL.Repositories
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 return await Entities
-                                .Where(x => x.Name.Contains(searchTerm))
+                                .Where(x => x.Name.ToLower().Contains(searchTerm.ToLower()))
                                 .CountAsync();
             }
 
