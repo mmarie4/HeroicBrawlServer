@@ -72,5 +72,10 @@ namespace HeroicBrawlServer.Services
             await Clients.Group(roomId.ToString()).SendAsync(message);
         }
 
+        public async Task SendMessage(Guid roomId, BaseMessage message)
+        {
+            await SendMessage(roomId, message.ToString());
+        }
+
     }
 }

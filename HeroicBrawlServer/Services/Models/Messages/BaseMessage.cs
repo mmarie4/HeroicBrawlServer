@@ -15,7 +15,14 @@ namespace HeroicBrawlServer.Services.Models.Messages
         /// <returns></returns>
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this, new JsonSerializerSettings { ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() } });
+            return JsonConvert.SerializeObject(this,
+                                               new JsonSerializerSettings
+                                               {
+                                                   ContractResolver = new DefaultContractResolver
+                                                                      {
+                                                                          NamingStrategy = new SnakeCaseNamingStrategy()
+                                                                      }
+                                               });
         }
     }
 }
