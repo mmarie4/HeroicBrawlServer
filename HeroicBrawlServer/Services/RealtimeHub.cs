@@ -1,9 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using HeroicBrawlServer.Services.Abstractions;
+﻿using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Services.Models.Messages;
 using HeroicBrawlServer.Shared.Extensions;
 using Microsoft.AspNetCore.SignalR;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace HeroicBrawlServer.Services
 {
@@ -16,6 +18,12 @@ namespace HeroicBrawlServer.Services
         private readonly IRoomService _roomService;
         private readonly IUserService _userService;
 
+        private TimeSpan TickDelay = TimeSpan.FromMilliseconds(33);
+        private ICollection<Guid> RoomIds { get; set; }
+        private Timer _broadcastLoop;
+
+        #region SignalR entry points
+
         /// <summary>
         ///     RealtimeHub constructor
         /// </summary>
@@ -24,6 +32,8 @@ namespace HeroicBrawlServer.Services
         {
             _roomService = roomService;
             _userService = userService;
+
+            _broadcastLoop = new Timer(Broadcast, null, TickDelay, TickDelay);
         }
 
         /// <summary>
@@ -40,6 +50,7 @@ namespace HeroicBrawlServer.Services
             await _roomService.AddMemberToRoomAsync(userId, roomId);
             await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
             await SendMessage(roomId, new UserJoinedRoomMessage(userId, user.Pseudo, heroId));
+            UpdateRoomList(roomId);
         }
 
         /// <summary>
@@ -57,25 +68,53 @@ namespace HeroicBrawlServer.Services
             await SendMessage(roomId, new UserLeftRoomMessage(userId, connectionId));
         }
 
+        // TODO: entry point to update game state
+
+        #endregion
+
+        #region private functions
+
+        /// <summary>
+        ///     For each room, broadcast message for game state
+        /// </summary>
+        /// <returns></returns>
+        public async void Broadcast(object state)
+        {
+            foreach (var roomId in RoomIds)
+            {
+                // TODO: Store state in each room and generate message
+                var stateMessage = new GameStateMessage();
+
+                await SendMessage(roomId, stateMessage);
+            }
+        }
+
         /// <summary>
         ///     Sends a message to all users in the room
         /// </summary>
         /// <param name="roomId">id of the room</param>
         /// <param name="message">message to send</param>
         /// <returns></returns>
-        public async Task SendMessage(Guid roomId, string message)
+        private async Task SendMessage(Guid roomId, string message)
         {
-            // TODO: Find userId using connectionId. Or just use connectionId in the clients to move others...
-
-            // Do game logic things ... Check cheats ... etc
-
             await Clients.Group(roomId.ToString()).SendAsync(message);
         }
-
-        public async Task SendMessage(Guid roomId, BaseMessage message)
+        private async Task SendMessage(Guid roomId, BaseMessage message)
         {
             await SendMessage(roomId, message.ToString());
         }
+
+        private void UpdateRoomList(Guid roomId)
+        {
+            if (RoomIds.Contains(roomId))
+            {
+                return;
+            }
+
+            RoomIds.Add(roomId);
+        }
+
+        #endregion
 
     }
 }

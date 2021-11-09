@@ -7,9 +7,13 @@ namespace HeroicBrawlServer.DAL.Entities
     public class RoomMember : BaseEntity
     {
         [Column("room_id")]
+        [ForeignKey("rooms")]
         public Guid RoomId { get; set; }
 
         [Column("user_id")]
+        [ForeignKey("rooms")]
         public Guid UserId { get; set; }
+
+        public Guid ConnectionId { get; set; }
     }
 }
