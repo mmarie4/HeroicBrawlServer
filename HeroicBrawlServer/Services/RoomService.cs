@@ -1,28 +1,35 @@
-﻿using System;
-using System.Threading.Tasks;
-using HeroicBrawlServer.DAL.Entities;
-using HeroicBrawlServer.DAL.Repositories.Abstractions;
-using HeroicBrawlServer.Services.Abstractions;
+﻿using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Services.Models.Rooms;
+using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HeroicBrawlServer.Services
 {
     public class RoomService : IRoomService
     {
-        private readonly IRoomRepository _roomRepository;
-        private readonly IRoomMemberRepository _roomMemberRepository;
+        private readonly IUserService _userService;
 
-        public RoomService(IRoomRepository roomRepository, IRoomMemberRepository roomMemberRepository)
+        private ICollection<Room> _rooms;
+        private TimeSpan _emptyRoomTTL;
+
+        public RoomService(IUserService userService)
         {
-            _roomRepository = roomRepository;
-            _roomMemberRepository = roomMemberRepository;
+            _userService = userService;
+
+            _rooms = new List<Room>();
+            _emptyRoomTTL = new TimeSpan(0, 10, 0);
         }
 
-        public async Task<PaginatedList<Room>> GetPaginatedListAsync(string searchTerm, int limit, int offset)
+        public PaginatedList<Room> GetPaginatedList(string searchTerm, int limit, int offset)
         {
-            var rooms = await _roomRepository.SearchRoomsAsync(searchTerm, limit, offset);
-            var total = await _roomRepository.GetTotalCountAsync(searchTerm);
+            var total = _rooms.Count;
+            var rooms = _rooms.Take(limit)
+                              .Skip(offset)
+                              .ToList();
 
             return new PaginatedList<Room>()
             {
@@ -33,48 +40,42 @@ namespace HeroicBrawlServer.Services
             };
         }
 
-        public async Task<Room> CreateRoomAsync(CreateRoomParameter parameter, Guid userId)
+        public async Task<Room> CreateRoom(CreateRoomParameter parameter, Guid userId)
         {
-            var room = new Room()
-            {
-                Id = Guid.NewGuid(),
-                Name = parameter.Name,
-                Max = parameter.Max,
-                CreatedById = userId,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedById = userId,
-                UpdatedAt = DateTime.UtcNow
-            };
+            var user = await _userService.GetByIdAsync(userId);
+            var room = new Room(parameter.Name, parameter.Max, parameter.MapId, user);
+            _rooms.Add(room);
 
-            var result = await _roomRepository.AddAsync(room);
-
-            await _roomRepository.SaveAsync();
-
-            return result;
+            return room;
         }
 
-        public async Task AddMemberToRoomAsync(Guid userId, Guid roomId)
+        public void AddUserToRoom(string connectionId, Guid userId, Guid roomId)
         {
-            var roomMember = new RoomMember()
-            {
-                Id = Guid.NewGuid(),
-                UserId = userId,
-                RoomId = roomId,
-                CreatedById = userId,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedById = userId,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-            await _roomMemberRepository.AddAsync(roomMember);
+            var room = _rooms.First(x => x.Id == roomId);
+            room.Users.Add(new OnlineUser(connectionId, userId));
         }
 
-        public async Task RemoveMemberFromRoomAsync(Guid userId, Guid roomId)
+        public void RemoveUserFromRoom(string connectionId, Guid userId, Guid roomId)
         {
-            var roomMember = await _roomMemberRepository.GetByUserIdAndRoomId(userId, roomId);
+            var room = _rooms.First(x => x.Id == roomId);
+            var user = room.Users.First(x => x.ConnectionId == connectionId);
+            room.Users.Remove(user);
+        }
 
-            if (roomMember != null)
-                await _roomMemberRepository.Remove(roomMember);
+        public ICollection<Room> Rooms()
+        {
+            return _rooms;
+        }
+
+        public void Clean()
+        {
+            foreach (var room in _rooms)
+            {
+                if (!room.Users.Any() && (DateTime.UtcNow - room.CreatedAt) > _emptyRoomTTL)
+                {
+                    _rooms.Remove(room);
+                };
+            }
         }
     }
 }

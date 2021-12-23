@@ -27,9 +27,9 @@ namespace HeroicBrawlServer.API
         /// <returns></returns>
         [HttpPost("search")]
         [ProducesResponseType(typeof(PaginatedList<RoomResponse>), 200)]
-        public async Task<PaginatedList<RoomResponse>> GetPaginatedList([FromBody] SearchRoomRequest request)
+        public PaginatedList<RoomResponse> GetPaginatedList([FromBody] SearchRoomRequest request)
         {
-            var rooms = await _roomService.GetPaginatedListAsync(request.SearchTerm, request.Limit, request.Offset);
+            var rooms = _roomService.GetPaginatedList(request.SearchTerm, request.Limit, request.Offset);
 
             return RoomResponse.FromEntities(rooms);
         }
@@ -47,7 +47,7 @@ namespace HeroicBrawlServer.API
 
             var parameter = CreateRoomRequest.ToParameter(request);
 
-            var room = await _roomService.CreateRoomAsync(parameter, userId);
+            var room = await _roomService.CreateRoom(parameter, userId);
 
             return RoomResponse.FromEntity(room);
         }

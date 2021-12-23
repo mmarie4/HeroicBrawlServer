@@ -1,8 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using HeroicBrawlServer.DAL.Entities;
-using HeroicBrawlServer.Services.Models.Rooms;
+﻿using HeroicBrawlServer.Services.Models.Rooms;
+using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HeroicBrawlServer.Services.Abstractions
 {
@@ -15,7 +16,7 @@ namespace HeroicBrawlServer.Services.Abstractions
         /// <param name="limit"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        Task<PaginatedList<Room>> GetPaginatedListAsync(string searchTerm, int limit, int offset);
+        PaginatedList<Room> GetPaginatedList(string searchTerm, int limit, int offset);
 
         /// <summary>
         ///     Creates a new room and adds the creator inside
@@ -23,22 +24,35 @@ namespace HeroicBrawlServer.Services.Abstractions
         /// <param name="parameter"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<Room> CreateRoomAsync(CreateRoomParameter parameter, Guid userId);
+        Task<Room> CreateRoom(CreateRoomParameter parameter, Guid userId);
 
         /// <summary>
         ///     Add a user to a room
         /// </summary>
+        /// <param name="connectionId"></param>
         /// <param name="userId"></param>
         /// <param name="roomId"></param>
         /// <returns></returns>
-        Task AddMemberToRoomAsync(Guid userId, Guid roomId);
+        void AddUserToRoom(string connectionId, Guid userId, Guid roomId);
 
         /// <summary>
         ///     Removes a user from a room
         /// </summary>
+        /// <param name="connectionId"></param>
         /// <param name="userId"></param>
         /// <param name="roomId"></param>
         /// <returns></returns>
-        Task RemoveMemberFromRoomAsync(Guid userId, Guid roomId);
+        void RemoveUserFromRoom(string connectionId, Guid userId, Guid roomId);
+
+        /// <summary>
+        ///     Returns all room
+        /// </summary>
+        /// <returns></returns>
+        ICollection<Room> Rooms();
+
+        /// <summary>
+        ///     Deletes empty rooms
+        /// </summary>
+        void Clean();
     }
 }

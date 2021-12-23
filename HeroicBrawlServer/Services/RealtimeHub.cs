@@ -19,7 +19,6 @@ namespace HeroicBrawlServer.Services
         private readonly IUserService _userService;
 
         private TimeSpan TickDelay = TimeSpan.FromMilliseconds(33);
-        private ICollection<Guid> RoomIds { get; set; }
         private Timer _broadcastLoop;
 
         #region SignalR entry points
@@ -47,10 +46,9 @@ namespace HeroicBrawlServer.Services
             var userId = bearerToken.ExtractUserId();
             var user = await _userService.GetByIdAsync(userId);
 
-            await _roomService.AddMemberToRoomAsync(userId, roomId);
+            _roomService.AddUserToRoom(Context.ConnectionId, userId, roomId);
             await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
             await SendMessage(roomId, new UserJoinedRoomMessage(userId, user.Pseudo, heroId));
-            UpdateRoomList(roomId);
         }
 
         /// <summary>
@@ -63,7 +61,7 @@ namespace HeroicBrawlServer.Services
         {
             var userId = bearerToken.ExtractUserId();
 
-            await _roomService.RemoveMemberFromRoomAsync(userId, roomId);
+            _roomService.RemoveUserFromRoom(Context.ConnectionId, userId, roomId);
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomId.ToString());
             await SendMessage(roomId, new UserLeftRoomMessage(userId, connectionId));
         }
@@ -80,13 +78,13 @@ namespace HeroicBrawlServer.Services
         /// <returns></returns>
         public async void Broadcast(object state)
         {
-            foreach (var roomId in RoomIds)
+            foreach (var room in _roomService.Rooms())
             {
-                // TODO: Store state in each room and generate message
-                var stateMessage = new GameStateMessage();
-
-                await SendMessage(roomId, stateMessage);
+                var stateMessage = new GameStateMessage(room.GameState);
+                await SendMessage(room.Id, stateMessage);
             }
+
+            _roomService.Clean();
         }
 
         /// <summary>
@@ -102,16 +100,6 @@ namespace HeroicBrawlServer.Services
         private async Task SendMessage(Guid roomId, BaseMessage message)
         {
             await SendMessage(roomId, message.ToString());
-        }
-
-        private void UpdateRoomList(Guid roomId)
-        {
-            if (RoomIds.Contains(roomId))
-            {
-                return;
-            }
-
-            RoomIds.Add(roomId);
         }
 
         #endregion

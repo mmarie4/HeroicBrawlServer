@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
-
-namespace HeroicBrawlServer.Services.Models.Messages
+﻿namespace HeroicBrawlServer.Services.Models.Rooms.Cache
 {
-    public class PlayerStateMessage : BaseMessage
+    public class PlayerState
     {
 
-        public PlayerStateMessage(string connectionId,
+        public PlayerState(string connectionId,
                                   int x,
                                   int y,
                                   int hp,
@@ -18,19 +16,14 @@ namespace HeroicBrawlServer.Services.Models.Messages
             State = state;
         }
 
-        [JsonProperty("c")]
         public string ConnectionId { get; }
 
-        [JsonProperty("x")]
         public int PositionX { get; }
 
-        [JsonProperty("y")]
         public int PositionY { get; }
 
-        [JsonProperty("hp")]
         public int HP { get; }
 
-        [JsonProperty("s")]
         public string State { get; }
     }
 }

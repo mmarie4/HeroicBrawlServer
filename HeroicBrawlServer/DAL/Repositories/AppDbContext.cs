@@ -11,6 +11,7 @@ namespace HeroicBrawlServer.DAL.Repositories
         {
         }
 
-        public DbSet<Room> Rooms { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<History> Histories { get; set; }
     }
 }

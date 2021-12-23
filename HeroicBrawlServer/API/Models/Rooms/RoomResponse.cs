@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using HeroicBrawlServer.DAL.Entities;
+﻿using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Models;
+using System;
 
 namespace HeroicBrawlServer.API.Models.Rooms
 {
@@ -10,6 +9,7 @@ namespace HeroicBrawlServer.API.Models.Rooms
         public string Name { get; set; }
         public int Max { get; set; }
         public Guid MapId { get; set; }
+        public int OnlineUsers { get; set; }
 
 
         /// <summary>
@@ -25,10 +25,9 @@ namespace HeroicBrawlServer.API.Models.Rooms
                 Max = entity.Max,
                 Name = entity.Name,
                 MapId = entity.MapId,
+                OnlineUsers = entity.Users.Count,
                 CreatedAt = entity.CreatedAt,
-                CreatedBy = entity.CreatedBy?.Pseudo,
-                UpdatedAt = entity.UpdatedAt,
-                UpdatedBy = entity.UpdatedBy?.Pseudo,
+                CreatedBy = entity.CreatedBy?.Pseudo ?? "Unknown user"
             };
         }
 

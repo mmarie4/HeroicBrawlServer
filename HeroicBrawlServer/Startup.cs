@@ -48,8 +48,7 @@ namespace HeroicBrawlServer
             services.AddScoped<IUserService, UserService>();
 
             // Repositories
-            services.AddScoped<IRoomRepository, RoomRepository>();
-            services.AddScoped<IRoomMemberRepository, RoomMemberRepository>();
+            services.AddScoped<IHistoryRepository, HistoryRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
 
