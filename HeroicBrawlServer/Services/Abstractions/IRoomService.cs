@@ -1,4 +1,5 @@
-﻿using HeroicBrawlServer.Services.Models.Rooms;
+﻿using HeroicBrawlServer.Services.Models.Enums;
+using HeroicBrawlServer.Services.Models.Rooms;
 using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Models;
 using System;
@@ -54,5 +55,30 @@ namespace HeroicBrawlServer.Services.Abstractions
         ///     Deletes empty rooms
         /// </summary>
         void Clean();
+
+        /// <summary>
+        ///     Updates player state with new position
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="connectionId"></param>
+        /// <param name="positionX"></param>
+        /// <param name="positionY"></param>
+        void MovePlayer(Guid roomId, string connectionId, int positionX, int positionY);
+
+        /// <summary>
+        ///     Updates player state with new animation state
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="connectionId"></param>
+        /// <param name="animationState"></param>
+        void SetAnimationStatePlayer(Guid roomId, string connectionId, AnimationStateEnum animationState);
+
+        /// <summary>
+        ///     Updates player state with new HP
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="connectionId"></param>
+        /// <param name="damageTaken"></param>
+        void TakeDamagePlayer(Guid roomId, string connectionId, int damageTaken);
     }
 }

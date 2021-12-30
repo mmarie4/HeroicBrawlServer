@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using HeroicBrawlServer.Services.Models.Enums;
+using HeroicBrawlServer.Services.Models.Rooms.Cache;
+using Newtonsoft.Json;
 
 namespace HeroicBrawlServer.Services.Models.Messages
 {
@@ -9,13 +11,22 @@ namespace HeroicBrawlServer.Services.Models.Messages
                                   int x,
                                   int y,
                                   int hp,
-                                  string state)
+                                  AnimationStateEnum state)
         {
             ConnectionId = connectionId;
             PositionX = x;
             PositionY = y;
             HP = hp;
-            State = state;
+            AnimationState = state;
+        }
+
+        public PlayerStateMessage(PlayerState playerState)
+        {
+            ConnectionId = playerState.ConnectionId;
+            PositionX = playerState.PositionX;
+            PositionY = playerState.PositionY;
+            HP = playerState.HP;
+            AnimationState = playerState.AnimationState;
         }
 
         [JsonProperty("c")]
@@ -31,6 +42,6 @@ namespace HeroicBrawlServer.Services.Models.Messages
         public int HP { get; }
 
         [JsonProperty("s")]
-        public string State { get; }
+        public AnimationStateEnum AnimationState { get; }
     }
 }

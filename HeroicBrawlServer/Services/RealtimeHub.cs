@@ -1,9 +1,9 @@
 ﻿using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Services.Models.Messages;
+using HeroicBrawlServer.Services.Models.Messages.PlayerActions;
 using HeroicBrawlServer.Shared.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,8 +21,6 @@ namespace HeroicBrawlServer.Services
         private TimeSpan TickDelay = TimeSpan.FromMilliseconds(33);
         private Timer _broadcastLoop;
 
-        #region SignalR entry points
-
         /// <summary>
         ///     RealtimeHub constructor
         /// </summary>
@@ -34,6 +32,8 @@ namespace HeroicBrawlServer.Services
 
             _broadcastLoop = new Timer(Broadcast, null, TickDelay, TickDelay);
         }
+
+        #region SignalR entry points
 
         /// <summary>
         ///     Adds user to a signalR group
@@ -66,7 +66,24 @@ namespace HeroicBrawlServer.Services
             await SendMessage(roomId, new UserLeftRoomMessage(userId, connectionId));
         }
 
-        // TODO: entry point to update game state
+        #region player actions
+
+        public void Move(MoveMessage request)
+        {
+            _roomService.MovePlayer(request.RoomId, request.ConnectionId, request.PositionX, request.PositionY);
+        }
+
+        public void SetAnimationState(SetAnimationMessage request)
+        {
+            _roomService.SetAnimationStatePlayer(request.RoomId, request.ConnectionId, request.AnimationState);
+        }
+
+        public void TakeDamage(TakeDamageMessage request)
+        {
+            _roomService.TakeDamagePlayer(request.RoomId, request.ConnectionId, request.DamageTaken);
+        }
+
+        #endregion
 
         #endregion
 

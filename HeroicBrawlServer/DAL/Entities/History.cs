@@ -20,5 +20,8 @@ namespace HeroicBrawlServer.DAL.Entities
 
         [Column("map_id")]
         public Guid MapId { get; set; }
+
+        [Column("hero_id")]
+        public Guid HeroId { get; set; }
     }
 }

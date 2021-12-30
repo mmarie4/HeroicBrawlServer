@@ -1,4 +1,5 @@
 ﻿using HeroicBrawlServer.Services.Abstractions;
+using HeroicBrawlServer.Services.Models.Enums;
 using HeroicBrawlServer.Services.Models.Rooms;
 using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Models;
@@ -77,5 +78,37 @@ namespace HeroicBrawlServer.Services
                 };
             }
         }
+
+        private PlayerState GetPlayerState(Guid roomId, string connectionId)
+        {
+            return _rooms.First(x => x.Id == roomId)
+                  .GameState
+                  .Players
+                  .First(x => x.ConnectionId == connectionId);
+        }
+
+        public void MovePlayer(Guid roomId, string connectionId, int positionX, int positionY)
+        {
+            var playerState = GetPlayerState(roomId, connectionId);
+
+            playerState.PositionX = positionX;
+            playerState.PositionY = positionY;
+
+        }
+
+        public void SetAnimationStatePlayer(Guid roomId, string connectionId, AnimationStateEnum animationState)
+        {
+            var playerState = GetPlayerState(roomId, connectionId);
+
+            playerState.AnimationState = animationState;
+        }
+
+        public void TakeDamagePlayer(Guid roomId, string connectionId, int damageTaken)
+        {
+            var playerState = GetPlayerState(roomId, connectionId);
+
+            playerState.HP = playerState.HP - damageTaken;
+        }
+
     }
 }

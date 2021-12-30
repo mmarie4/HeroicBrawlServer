@@ -22,6 +22,8 @@
     <Folder Include="Services\Models\Users\" />
     <Folder Include="API\Models\Users\" />
     <Folder Include="Shared\Extensions\" />
+    <Folder Include="Services\Models\Messages\PlayerActions\" />
+    <Folder Include="Services\Models\Enums\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +32,8 @@
     <None Remove="API\Models\Users\" />
     <None Remove="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <None Remove="Shared\Extensions\" />
+    <None Remove="Services\Models\Messages\PlayerActions\" />
+    <None Remove="Services\Models\Enums\" />
   </ItemGroup>
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

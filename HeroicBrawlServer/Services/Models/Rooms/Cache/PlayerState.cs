@@ -1,4 +1,6 @@
-﻿namespace HeroicBrawlServer.Services.Models.Rooms.Cache
+﻿using HeroicBrawlServer.Services.Models.Enums;
+
+namespace HeroicBrawlServer.Services.Models.Rooms.Cache
 {
     public class PlayerState
     {
@@ -7,23 +9,23 @@
                                   int x,
                                   int y,
                                   int hp,
-                                  string state)
+                                  AnimationStateEnum state)
         {
             ConnectionId = connectionId;
             PositionX = x;
             PositionY = y;
             HP = hp;
-            State = state;
+            AnimationState = state;
         }
 
         public string ConnectionId { get; }
 
-        public int PositionX { get; }
+        public int PositionX { get; set; }
 
-        public int PositionY { get; }
+        public int PositionY { get; set; }
 
-        public int HP { get; }
+        public int HP { get; set; }
 
-        public string State { get; }
+        public AnimationStateEnum AnimationState { get; set; }
     }
 }
