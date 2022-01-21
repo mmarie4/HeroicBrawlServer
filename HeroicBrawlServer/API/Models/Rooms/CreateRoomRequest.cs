@@ -1,4 +1,5 @@
-﻿using HeroicBrawlServer.Services.Models.Rooms;
+﻿using HeroicBrawlServer.Services.Models.Maps;
+using HeroicBrawlServer.Services.Models.Rooms;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,7 +12,7 @@ namespace HeroicBrawlServer.API.Models.Rooms
         [Required]
         public int Max { get; set; }
         [Required]
-        public Guid MapId { get; set; }
+        public Map Map { get; set; }
 
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace HeroicBrawlServer.API.Models.Rooms
             {
                 Name = request.Name,
                 Max = request.Max,
-                MapId = request.MapId
+                Map = request.Map
             };
         }
     }

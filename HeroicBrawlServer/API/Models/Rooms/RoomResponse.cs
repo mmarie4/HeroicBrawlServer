@@ -24,7 +24,7 @@ namespace HeroicBrawlServer.API.Models.Rooms
                 Id = entity.Id,
                 Max = entity.Max,
                 Name = entity.Name,
-                MapId = entity.MapId,
+                MapId = entity.Map.Id,
                 OnlineUsers = entity.Users.Count,
                 CreatedAt = entity.CreatedAt,
                 CreatedBy = entity.CreatedBy?.Pseudo ?? "Unknown user"
