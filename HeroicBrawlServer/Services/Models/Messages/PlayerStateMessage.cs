@@ -7,12 +7,14 @@ namespace HeroicBrawlServer.Services.Models.Messages
     public class PlayerStateMessage : BaseMessage
     {
 
-        public PlayerStateMessage(string connectionId,
+        public PlayerStateMessage(bool isAlive,
+                                  string connectionId,
                                   int x,
                                   int y,
                                   int hp,
                                   AnimationStateEnum state)
         {
+            IsAlive = isAlive;
             ConnectionId = connectionId;
             PositionX = x;
             PositionY = y;
@@ -28,6 +30,9 @@ namespace HeroicBrawlServer.Services.Models.Messages
             HP = playerState.HP;
             AnimationState = playerState.AnimationState;
         }
+
+        [JsonProperty("a")]
+        public bool IsAlive { get; }
 
         [JsonProperty("c")]
         public string ConnectionId { get; }

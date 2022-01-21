@@ -5,18 +5,24 @@ namespace HeroicBrawlServer.Services.Models.Rooms.Cache
     public class PlayerState
     {
 
-        public PlayerState(string connectionId,
-                                  int x,
-                                  int y,
-                                  int hp,
-                                  AnimationStateEnum state)
+        public PlayerState(bool isAlive,
+                           string connectionId,
+                           int x,
+                           int y,
+                           int hp,
+                           AnimationStateEnum state)
         {
+            IsAlive = isAlive;
             ConnectionId = connectionId;
             PositionX = x;
             PositionY = y;
             HP = hp;
             AnimationState = state;
+            DeathCount = 0;
+            KillCount = 0;
         }
+
+        public bool IsAlive { get; set; }
 
         public string ConnectionId { get; }
 
@@ -27,5 +33,9 @@ namespace HeroicBrawlServer.Services.Models.Rooms.Cache
         public int HP { get; set; }
 
         public AnimationStateEnum AnimationState { get; set; }
+
+        public int DeathCount { get; set; }
+
+        public int KillCount { get; set; }
     }
 }

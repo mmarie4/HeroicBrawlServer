@@ -17,12 +17,15 @@ namespace HeroicBrawlServer.Services
         private ICollection<Room> _rooms;
         private TimeSpan _emptyRoomTTL;
 
+        // TODO: make it specific per hero ?
+        private int _baseHP = 1000;
+
         public RoomService(IUserService userService)
         {
             _userService = userService;
 
             _rooms = new List<Room>();
-            _emptyRoomTTL = new TimeSpan(0, 10, 0);
+            _emptyRoomTTL = new TimeSpan(0, 3, 0);
         }
 
         public PaginatedList<Room> GetPaginatedList(string searchTerm, int limit, int offset)
@@ -44,7 +47,7 @@ namespace HeroicBrawlServer.Services
         public async Task<Room> CreateRoom(CreateRoomParameter parameter, Guid userId)
         {
             var user = await _userService.GetByIdAsync(userId);
-            var room = new Room(parameter.Name, parameter.Max, parameter.MapId, user);
+            var room = new Room(parameter.Name, parameter.Max, parameter.Map, user);
             _rooms.Add(room);
 
             return room;
@@ -53,12 +56,27 @@ namespace HeroicBrawlServer.Services
         public void AddUserToRoom(string connectionId, Guid userId, Guid roomId)
         {
             var room = _rooms.First(x => x.Id == roomId);
+
+            var spawningPoint = room.Map.GetSpawningPoint();
+            room.GameState.Players.Add(new PlayerState(true,
+                                                       connectionId,
+                                                       spawningPoint.X,
+                                                       spawningPoint.Y,
+                                                       _baseHP, 
+                                                       AnimationStateEnum.Idle));
+
             room.Users.Add(new OnlineUser(connectionId, userId));
+
+            spawningPoint.Update();
         }
 
         public void RemoveUserFromRoom(string connectionId, Guid userId, Guid roomId)
         {
             var room = _rooms.First(x => x.Id == roomId);
+
+            var playerStateToRemove = GetPlayerState(roomId, connectionId);
+            room.GameState.Players.Remove(playerStateToRemove);
+
             var user = room.Users.First(x => x.ConnectionId == connectionId);
             room.Users.Remove(user);
         }
@@ -82,9 +100,9 @@ namespace HeroicBrawlServer.Services
         private PlayerState GetPlayerState(Guid roomId, string connectionId)
         {
             return _rooms.First(x => x.Id == roomId)
-                  .GameState
-                  .Players
-                  .First(x => x.ConnectionId == connectionId);
+                         .GameState
+                         .Players
+                         .First(x => x.ConnectionId == connectionId);
         }
 
         public void MovePlayer(Guid roomId, string connectionId, int positionX, int positionY)
@@ -103,11 +121,33 @@ namespace HeroicBrawlServer.Services
             playerState.AnimationState = animationState;
         }
 
-        public void TakeDamagePlayer(Guid roomId, string connectionId, int damageTaken)
+        public void TakeDamagePlayer(Guid roomId, string connectionId, int damageTaken, string fromConnectionId)
         {
             var playerState = GetPlayerState(roomId, connectionId);
 
             playerState.HP = playerState.HP - damageTaken;
+
+            if(playerState.HP <= 0)
+            {
+                playerState.IsAlive = false;
+                playerState.DeathCount++;
+                var fromPlayerState = GetPlayerState(roomId, fromConnectionId);
+                fromPlayerState.KillCount++;
+            }
+        }
+
+        public void RespawnPlayer(Guid roomId, string connectionId)
+        {
+            var playerState = GetPlayerState(roomId, connectionId);
+            var spawningPoint = _rooms.First(x => x.Id == roomId)
+                            .Map
+                            .GetSpawningPoint();
+
+            playerState.PositionX = spawningPoint.X;
+            playerState.PositionY = spawningPoint.Y;
+            playerState.HP = _baseHP;
+
+            spawningPoint.Update();
         }
 
     }

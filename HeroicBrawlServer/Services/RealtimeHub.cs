@@ -80,7 +80,12 @@ namespace HeroicBrawlServer.Services
 
         public void TakeDamage(TakeDamageMessage request)
         {
-            _roomService.TakeDamagePlayer(request.RoomId, request.ConnectionId, request.DamageTaken);
+            _roomService.TakeDamagePlayer(request.RoomId, request.ConnectionId, request.DamageTaken, request.FromConnectionId);
+        }
+
+        public void Respawn(RespawnMessage request)
+        {
+            _roomService.RespawnPlayer(request.RoomId, request.ConnectionId);
         }
 
         #endregion

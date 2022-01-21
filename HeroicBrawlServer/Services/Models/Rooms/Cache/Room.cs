@@ -1,4 +1,5 @@
 ﻿using HeroicBrawlServer.DAL.Entities;
+using HeroicBrawlServer.Services.Models.Maps;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +13,7 @@ namespace HeroicBrawlServer.Services.Models.Rooms.Cache
 
         public int Max { get; }
 
-        public Guid MapId { get; }
+        public Map Map { get; set; }
 
         public DateTime CreatedAt { get; }
 
@@ -22,12 +23,12 @@ namespace HeroicBrawlServer.Services.Models.Rooms.Cache
 
         public GameState GameState { get; }
 
-        public Room(string name, int max, Guid mapId, User createdBy)
+        public Room(string name, int max, Map map, User createdBy)
         {
             Id = Guid.NewGuid();
             Name = name;
             Max = max;
-            MapId = mapId;
+            Map = map;
             CreatedAt = DateTime.UtcNow;
             CreatedBy = createdBy;
             Users = new List<OnlineUser>();

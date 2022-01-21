@@ -1,4 +1,4 @@
-﻿using System;
+﻿using HeroicBrawlServer.Services.Models.Maps;
 
 namespace HeroicBrawlServer.Services.Models.Rooms
 {
@@ -6,6 +6,6 @@ namespace HeroicBrawlServer.Services.Models.Rooms
     {
         public string Name { get; set; }
         public int Max { get; set; }
-        public Guid MapId { get; set; }
+        public Map Map { get; set; }
     }
 }
