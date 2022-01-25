@@ -53,19 +53,18 @@ namespace HeroicBrawlServer.Services
             return room;
         }
 
-        public void AddUserToRoom(string connectionId, Guid userId, Guid roomId)
+        public void AddUserToRoom(string connectionId, Guid userId, Guid roomId, Guid heroId, string initialState)
         {
             var room = _rooms.First(x => x.Id == roomId);
 
             var spawningPoint = room.Map.GetSpawningPoint();
-            room.GameState.Players.Add(new PlayerState(true,
+            room.GameState.Players.Add(new PlayerState(heroId,
+                                                       true,
                                                        connectionId,
                                                        spawningPoint.X,
                                                        spawningPoint.Y,
-                                                       _baseHP, 
-                                                       AnimationStateEnum.Idle));
-
-            room.Users.Add(new OnlineUser(connectionId, userId));
+                                                       _baseHP,
+                                                       initialState));
 
             spawningPoint.Update();
         }
@@ -76,9 +75,6 @@ namespace HeroicBrawlServer.Services
 
             var playerStateToRemove = GetPlayerState(roomId, connectionId);
             room.GameState.Players.Remove(playerStateToRemove);
-
-            var user = room.Users.First(x => x.ConnectionId == connectionId);
-            room.Users.Remove(user);
         }
 
         public ICollection<Room> Rooms()
@@ -90,7 +86,7 @@ namespace HeroicBrawlServer.Services
         {
             foreach (var room in _rooms)
             {
-                if (!room.Users.Any() && (DateTime.UtcNow - room.CreatedAt) > _emptyRoomTTL)
+                if (!room.GameState.Players.Any() && (DateTime.UtcNow - room.CreatedAt) > _emptyRoomTTL)
                 {
                     _rooms.Remove(room);
                 };
@@ -114,7 +110,7 @@ namespace HeroicBrawlServer.Services
 
         }
 
-        public void SetAnimationStatePlayer(Guid roomId, string connectionId, AnimationStateEnum animationState)
+        public void SetAnimationStatePlayer(Guid roomId, string connectionId, string animationState)
         {
             var playerState = GetPlayerState(roomId, connectionId);
 

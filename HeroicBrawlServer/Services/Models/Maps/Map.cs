@@ -18,7 +18,7 @@ namespace HeroicBrawlServer.Services.Models.Maps
         public MapSpawningPoint GetSpawningPoint()
         {
             var spawningPoint = SpawningPoints.OrderByDescending(x => x.LastSpawnDate)
-                                 .FirstOrDefault();
+                                              .FirstOrDefault();
 
             return spawningPoint ?? new MapSpawningPoint(0, 0);
         }

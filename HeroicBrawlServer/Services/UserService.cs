@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using HeroicBrawlServer.DAL.Entities;
 using HeroicBrawlServer.DAL.Repositories.Abstractions;
 using HeroicBrawlServer.Services.Abstractions;
+using HeroicBrawlServer.Services.Configuration;
 using HeroicBrawlServer.Services.Models.Users;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace HeroicBrawlServer.Services
@@ -17,10 +19,13 @@ namespace HeroicBrawlServer.Services
     {
 
         private readonly IUserRepository _userRepository;
+        private readonly IOptions<SecurityOptions> _securityOptions;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository,
+                           IOptions<SecurityOptions> securityOptions)
         {
             _userRepository = userRepository;
+            _securityOptions = securityOptions;
         }
 
         public async Task<(User, string)> Login(LoginParameter loginParameter)
@@ -103,19 +108,9 @@ namespace HeroicBrawlServer.Services
             return Convert.ToBase64String(randomBytes);
         }
 
-        // The secret is a base64-encoded string, always make sure to use a secure long string so no one can guess it. ever!.
-        // a very recommended approach to use is through the HMACSHA256() class, to generate such a secure secret, you can refer to the below function
-        // you can run a small test by calling the GenerateSecureSecret() function to generate a random secure secret once, grab it, and use it as the secret above 
-        // or you can save it into appsettings.json file and then load it from them, the choice is yours
-
-        private const string Issuer = "https://localhost:5001";
-        private const string Audience = "https://localhost:5001";
-
-        private const string Secret = "OFRC1j9aaR2BvADxNWlG2pmuD392UfQBZZLM1fuzDEzDlEpSsn+btrpJKd3FfY855OMA9oK4Mc8y48eYUrVUSw==";
-
         private string GenerateToken(User user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_securityOptions.Value.Secret));
 
             var permClaims = new List<Claim>()
             {
@@ -123,14 +118,15 @@ namespace HeroicBrawlServer.Services
             };
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
-            var token = new JwtSecurityToken(Issuer,  
-                            Audience,   
-                            permClaims,
-                            expires: DateTime.Now.AddYears(100),
-                            signingCredentials: signingCredentials);
+            var token = new JwtSecurityToken(_securityOptions.Value.Issuer,  
+                                             _securityOptions.Value.Audience,   
+                                             permClaims,
+                                             expires: DateTime.Now.AddYears(100),
+                                             signingCredentials: signingCredentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
         #endregion
     }
 }

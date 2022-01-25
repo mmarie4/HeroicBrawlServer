@@ -19,8 +19,6 @@ namespace HeroicBrawlServer.Services.Models.Rooms.Cache
 
         public User CreatedBy { get; }
 
-        public ICollection<OnlineUser> Users { get; }
-
         public GameState GameState { get; }
 
         public Room(string name, int max, Map map, User createdBy)
@@ -31,7 +29,6 @@ namespace HeroicBrawlServer.Services.Models.Rooms.Cache
             Map = map;
             CreatedAt = DateTime.UtcNow;
             CreatedBy = createdBy;
-            Users = new List<OnlineUser>();
             GameState = new GameState();
         }
     }

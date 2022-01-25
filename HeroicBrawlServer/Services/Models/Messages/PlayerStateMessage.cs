@@ -12,7 +12,7 @@ namespace HeroicBrawlServer.Services.Models.Messages
                                   int x,
                                   int y,
                                   int hp,
-                                  AnimationStateEnum state)
+                                  string state)
         {
             IsAlive = isAlive;
             ConnectionId = connectionId;
@@ -47,6 +47,6 @@ namespace HeroicBrawlServer.Services.Models.Messages
         public int HP { get; }
 
         [JsonProperty("s")]
-        public AnimationStateEnum AnimationState { get; }
+        public string AnimationState { get; }
     }
 }

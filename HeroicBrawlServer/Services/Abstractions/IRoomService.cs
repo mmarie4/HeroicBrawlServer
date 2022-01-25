@@ -34,7 +34,7 @@ namespace HeroicBrawlServer.Services.Abstractions
         /// <param name="userId"></param>
         /// <param name="roomId"></param>
         /// <returns></returns>
-        void AddUserToRoom(string connectionId, Guid userId, Guid roomId);
+        void AddUserToRoom(string connectionId, Guid userId, Guid roomId, Guid heroId, string initialState);
 
         /// <summary>
         ///     Removes a user from a room
@@ -71,7 +71,7 @@ namespace HeroicBrawlServer.Services.Abstractions
         /// <param name="roomId"></param>
         /// <param name="connectionId"></param>
         /// <param name="animationState"></param>
-        void SetAnimationStatePlayer(Guid roomId, string connectionId, AnimationStateEnum animationState);
+        void SetAnimationStatePlayer(Guid roomId, string connectionId, string animationState);
 
         /// <summary>
         ///     Updates player state with new HP

@@ -5,6 +5,7 @@ namespace HeroicBrawlServer.API.Models.Users
     public class SignUpRequest
     {
         public string Email { get; set; }
+        public string Pseudo { get; set; }
         public string Password { get; set; }
 
         /// <summary>
@@ -17,6 +18,7 @@ namespace HeroicBrawlServer.API.Models.Users
             return new SignUpParameter()
             {
                 Email = request.Email,
+                Pseudo = request.Pseudo,
                 Password = request.Password
             };
         }

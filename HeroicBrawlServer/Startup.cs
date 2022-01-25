@@ -5,6 +5,7 @@ using HeroicBrawlServer.DAL.Repositories;
 using HeroicBrawlServer.DAL.Repositories.Abstractions;
 using HeroicBrawlServer.Services;
 using HeroicBrawlServer.Services.Abstractions;
+using HeroicBrawlServer.Services.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +52,8 @@ namespace HeroicBrawlServer
             services.AddScoped<IHistoryRepository, HistoryRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
-
+            // Options
+            services.Configure<SecurityOptions>(Configuration.GetSection("SecurityOptions"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

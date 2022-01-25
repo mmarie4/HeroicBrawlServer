@@ -39,14 +39,15 @@ namespace HeroicBrawlServer.Services
         ///     Adds user to a signalR group
         /// </summary>
         /// <param name="roomId">Id of the room</param>
+        /// <param name="heroId">Id of hero</param>
         /// <param name="bearerToken">Access token containing the user id</param>
         /// <returns></returns>
-        public async Task JoinRoom(Guid roomId, Guid heroId, string bearerToken)
+        public async Task JoinRoom(Guid roomId, Guid heroId, string initialState, string bearerToken)
         {
             var userId = bearerToken.ExtractUserId();
             var user = await _userService.GetByIdAsync(userId);
 
-            _roomService.AddUserToRoom(Context.ConnectionId, userId, roomId);
+            _roomService.AddUserToRoom(Context.ConnectionId, userId, roomId, heroId, initialState);
             await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
             await SendMessage(roomId, new UserJoinedRoomMessage(userId, user.Pseudo, heroId));
         }
