@@ -21,8 +21,8 @@ namespace HeroicBrawlServer.API.Models.Users
                 Token = token,
                 Email = entity.Email,
                 CreatedAt = entity.CreatedAt,
-                CreatedBy = entity.CreatedBy?.Pseudo,
-                UpdatedBy = entity.UpdatedBy?.Pseudo,
+                //CreatedBy = entity.CreatedBy?.Pseudo,
+                //UpdatedBy = entity.UpdatedBy?.Pseudo,
                 UpdatedAt = entity.UpdatedAt
             };
         }

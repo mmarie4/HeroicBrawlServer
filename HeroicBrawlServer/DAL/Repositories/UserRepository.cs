@@ -11,10 +11,7 @@ namespace HeroicBrawlServer.DAL.Repositories
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            return await Entities
-                .Include(x => x.CreatedBy)
-                .Include(x => x.UpdatedBy)
-                .FirstOrDefaultAsync(x => x.Email == email);
+            return await Entities.FirstOrDefaultAsync(x => x.Email == email);
         }
     }
 }

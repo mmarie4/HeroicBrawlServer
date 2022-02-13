@@ -18,9 +18,15 @@ namespace HeroicBrawlServer
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+
+        public Startup(IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile($"appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -41,8 +47,8 @@ namespace HeroicBrawlServer
             services.AddSignalR();
 
             // Db context
-            services.AddDbContext<AppDbContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(connectionString));
 
             // Services
             services.AddScoped<IRoomService, RoomService>();
@@ -64,7 +70,6 @@ namespace HeroicBrawlServer
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HeroicBrawlServer v1"));
-
             }
 
             app.UseHttpsRedirection();

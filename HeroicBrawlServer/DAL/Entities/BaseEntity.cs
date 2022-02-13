@@ -12,16 +12,14 @@ namespace HeroicBrawlServer.DAL.Entities
         public DateTime CreatedAt { get; set; }
 
         [Column("created_by")]
-        [ForeignKey("users")]
         public Guid CreatedById { get; set; }
-        public User CreatedBy { get; set; }
+        public virtual User CreatedBy { get; set; }
 
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
 
         [Column("updated_by")]
-        [ForeignKey("users")]
         public Guid UpdatedById { get; set; }
-        public User UpdatedBy { get; set; }
+        public virtual User UpdatedBy { get; set; }
     }
 }

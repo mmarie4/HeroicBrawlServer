@@ -6,7 +6,8 @@ namespace HeroicBrawlServer.DAL.Entities
     [Table("histories")]
     public class History : BaseEntity
     {
-        [Column("user_id")]
+        //[Column("user_id")]
+        [NotMapped]
         public Guid UserId { get; set; }
 
         [Column("rank")]
