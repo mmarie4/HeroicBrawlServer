@@ -1,23 +1,24 @@
 ﻿using HeroicBrawlServer.Services.Models.Users;
 
-namespace HeroicBrawlServer.API.Models.Users
+namespace HeroicBrawlServer.Controllers.Models.Users
 {
-    public class LoginRequest
+    public class SignUpRequest
     {
         public string Email { get; set; }
+        public string Pseudo { get; set; }
         public string Password { get; set; }
 
-
         /// <summary>
-        ///     Builds a LoginParameter from a LoginRequest
+        ///     Builds a SignUpParameter from a SignUpRequest
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static LoginParameter ToParameter(LoginRequest request)
+        public static SignUpParameter ToParameter(SignUpRequest request)
         {
-            return new LoginParameter()
+            return new SignUpParameter()
             {
                 Email = request.Email,
+                Pseudo = request.Pseudo,
                 Password = request.Password
             };
         }

@@ -1,4 +1,4 @@
-﻿namespace HeroicBrawlServer.API.Models.Rooms
+﻿namespace HeroicBrawlServer.Controllers.Models.Rooms
 {
     public class SearchRoomRequest
     {

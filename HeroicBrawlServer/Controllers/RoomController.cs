@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
-using HeroicBrawlServer.API.Models.Rooms;
+using HeroicBrawlServer.Controllers.Models.Rooms;
 using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Shared.Extensions;
 using HeroicBrawlServer.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HeroicBrawlServer.API
+namespace HeroicBrawlServer.Controllers
 {
     [ApiController]
     [Route("api/rooms")]

@@ -3,7 +3,7 @@ using HeroicBrawlServer.Services.Models.Rooms;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace HeroicBrawlServer.API.Models.Rooms
+namespace HeroicBrawlServer.Controllers.Models.Rooms
 {
     public class CreateRoomRequest
     {

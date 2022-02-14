@@ -5,8 +5,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using HeroicBrawlServer.DAL.Entities;
-using HeroicBrawlServer.DAL.Repositories.Abstractions;
+using HeroicBrawlServer.Data.Entities;
+using HeroicBrawlServer.Data.Repositories.Abstractions;
 using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Services.Configuration;
 using HeroicBrawlServer.Services.Models.Users;
@@ -65,6 +65,7 @@ namespace HeroicBrawlServer.Services
                 PasswordSalt = salt.ToString(),
                 PasswordHash = HashUsingPbkdf2(signUpParameter.Password, salt.ToString())
             };
+            user.Init(user.Id);
 
             var token = await Task.Run(() => GenerateToken(user));
 
@@ -121,7 +122,6 @@ namespace HeroicBrawlServer.Services
             var token = new JwtSecurityToken(_securityOptions.Value.Issuer,  
                                              _securityOptions.Value.Audience,   
                                              permClaims,
-                                             expires: DateTime.Now.AddYears(100),
                                              signingCredentials: signingCredentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

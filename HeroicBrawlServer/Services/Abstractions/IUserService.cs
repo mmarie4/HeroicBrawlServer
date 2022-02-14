@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using HeroicBrawlServer.DAL.Entities;
+﻿using HeroicBrawlServer.Data.Entities;
 using HeroicBrawlServer.Services.Models.Users;
+using System;
+using System.Threading.Tasks;
 
 namespace HeroicBrawlServer.Services.Abstractions
 {

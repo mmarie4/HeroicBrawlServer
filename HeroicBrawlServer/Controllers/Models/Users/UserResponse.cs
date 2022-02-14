@@ -1,6 +1,6 @@
-﻿using HeroicBrawlServer.DAL.Entities;
+﻿using HeroicBrawlServer.Data.Entities;
 
-namespace HeroicBrawlServer.API.Models.Users
+namespace HeroicBrawlServer.Controllers.Models.Users
 {
     public class UserResponse : BaseEntityResponse
     {
@@ -20,9 +20,10 @@ namespace HeroicBrawlServer.API.Models.Users
                 Id = entity.Id,
                 Token = token,
                 Email = entity.Email,
+                Pseudo = entity.Pseudo,
                 CreatedAt = entity.CreatedAt,
-                //CreatedBy = entity.CreatedBy?.Pseudo,
-                //UpdatedBy = entity.UpdatedBy?.Pseudo,
+                CreatedBy = entity.CreatedBy?.Pseudo,
+                UpdatedBy = entity.UpdatedBy?.Pseudo,
                 UpdatedAt = entity.UpdatedAt
             };
         }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HeroicBrawlServer.API.Models
+namespace HeroicBrawlServer.Controllers.Models
 {
     public class BaseEntityResponse
     {

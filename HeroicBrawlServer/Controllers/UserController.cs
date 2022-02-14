@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using HeroicBrawlServer.API.Models.Users;
+using HeroicBrawlServer.Controllers.Models.Users;
 using HeroicBrawlServer.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HeroicBrawlServer.API
+namespace HeroicBrawlServer.Controllers
 {
     [ApiController]
     [Route("api/users")]

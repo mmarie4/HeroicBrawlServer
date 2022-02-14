@@ -2,7 +2,7 @@
 using HeroicBrawlServer.Shared.Models;
 using System;
 
-namespace HeroicBrawlServer.API.Models.Rooms
+namespace HeroicBrawlServer.Controllers.Models.Rooms
 {
     public class RoomResponse : BaseEntityResponse
     {

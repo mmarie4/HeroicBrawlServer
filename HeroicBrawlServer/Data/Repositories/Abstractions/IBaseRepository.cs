@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace HeroicBrawlServer.DAL.Repositories.Abstractions
+namespace HeroicBrawlServer.Data.Repositories.Abstractions
 {
     public interface IBaseRepository<TEntity>
     {

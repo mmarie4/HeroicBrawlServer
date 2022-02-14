@@ -1,7 +1,7 @@
-﻿using HeroicBrawlServer.DAL.Entities;
-using HeroicBrawlServer.DAL.Repositories.Abstractions;
+﻿using HeroicBrawlServer.Data.Entities;
+using HeroicBrawlServer.Data.Repositories.Abstractions;
 
-namespace HeroicBrawlServer.DAL.Repositories
+namespace HeroicBrawlServer.Data.Repositories
 {
     public class HistoryRepository : BaseRepository<History>, IHistoryRepository
     {

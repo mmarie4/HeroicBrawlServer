@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using HeroicBrawlServer.DAL.Entities;
+using HeroicBrawlServer.Data.Entities;
 
-namespace HeroicBrawlServer.DAL.Repositories.Abstractions
+namespace HeroicBrawlServer.Data.Repositories.Abstractions
 {
     public interface IUserRepository : IBaseRepository<User>
     {

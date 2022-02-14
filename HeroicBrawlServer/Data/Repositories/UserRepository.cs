@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using HeroicBrawlServer.DAL.Entities;
-using HeroicBrawlServer.DAL.Repositories.Abstractions;
+using HeroicBrawlServer.Data.Entities;
+using HeroicBrawlServer.Data.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
-namespace HeroicBrawlServer.DAL.Repositories
+namespace HeroicBrawlServer.Data.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {

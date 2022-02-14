@@ -1,4 +1,4 @@
-﻿using HeroicBrawlServer.DAL.Entities;
+﻿using HeroicBrawlServer.Data.Entities;
 using HeroicBrawlServer.Services.Models.Maps;
 using System;
 using System.Collections.Generic;

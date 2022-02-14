@@ -1,18 +1,25 @@
 using System;
 using System.IO;
 using System.Reflection;
-using HeroicBrawlServer.DAL.Repositories;
-using HeroicBrawlServer.DAL.Repositories.Abstractions;
+using System.Text;
+using System.Threading.Tasks;
+using HeroicBrawlServer.Data.Repositories;
+using HeroicBrawlServer.Data.Repositories.Abstractions;
 using HeroicBrawlServer.Services;
 using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Services.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Configuration;
 
 namespace HeroicBrawlServer
 {
@@ -46,6 +53,35 @@ namespace HeroicBrawlServer
 
             services.AddSignalR();
 
+
+            // Configure JWT authentication.
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+              .AddJwtBearer(options =>
+              {
+                  options.TokenValidationParameters = new TokenValidationParameters
+                  {
+                      ValidateIssuer = true,
+                      ValidateAudience = true,
+                      ValidateIssuerSigningKey = true,
+                      ValidIssuer = Configuration["SecurityOptions:Issuer"],
+                      ValidAudience = Configuration["SecurityOptions:Audience"],
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecurityOptions:Secret"])),
+                      RequireExpirationTime = false
+                  };
+
+                  options.Events = new JwtBearerEvents
+                  {
+                      OnAuthenticationFailed = context =>
+                      {
+                          if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                          {
+                              context.Response.Headers.Add("Token-Expired", "true");
+                          }
+                          return Task.CompletedTask;
+                      }
+                  };
+              });
+
             // Db context
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(connectionString));
@@ -63,7 +99,7 @@ namespace HeroicBrawlServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -72,10 +108,17 @@ namespace HeroicBrawlServer
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HeroicBrawlServer v1"));
             }
 
+            loggerFactory.AddSerilog();
+
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials()); // allow credentials
+
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
