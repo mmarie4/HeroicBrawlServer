@@ -17,7 +17,7 @@ namespace HeroicBrawlServer.Services.Abstractions
         /// <param name="limit"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        PaginatedList<Room> GetPaginatedList(string searchTerm, int limit, int offset);
+        PaginatedList<Room> GetPaginatedList(string? searchTerm, int limit, int offset);
 
         /// <summary>
         ///     Creates a new room and adds the creator inside

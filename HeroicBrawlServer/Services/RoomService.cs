@@ -1,5 +1,4 @@
 ﻿using HeroicBrawlServer.Services.Abstractions;
-using HeroicBrawlServer.Services.Models.Enums;
 using HeroicBrawlServer.Services.Models.Rooms;
 using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Models;
@@ -13,8 +12,6 @@ namespace HeroicBrawlServer.Services
     public class RoomService : IRoomService
     {
         private readonly IUserService _userService;
-
-        private ICollection<Room> _rooms;
         private TimeSpan _emptyRoomTTL;
 
         // TODO: make it specific per hero ?
@@ -24,16 +21,26 @@ namespace HeroicBrawlServer.Services
         {
             _userService = userService;
 
-            _rooms = new List<Room>();
             _emptyRoomTTL = new TimeSpan(0, 3, 0);
         }
 
-        public PaginatedList<Room> GetPaginatedList(string searchTerm, int limit, int offset)
+        public PaginatedList<Room> GetPaginatedList(string? searchTerm, int limit, int offset)
         {
-            var total = _rooms.Count;
-            var rooms = _rooms.Take(limit)
+            var total = Cache.Rooms.Count;
+            List<Room> rooms;
+            if (searchTerm != null && !string.IsNullOrWhiteSpace(searchTerm))
+            {
+                rooms = Cache.Rooms.Where(x => x.Name.ToLower().Contains(searchTerm.ToLower()))
+                              .Take(limit)
                               .Skip(offset)
                               .ToList();
+            }
+            else
+            {
+                rooms = Cache.Rooms.Take(limit)
+                              .Skip(offset)
+                              .ToList();
+            }
 
             return new PaginatedList<Room>()
             {
@@ -48,14 +55,14 @@ namespace HeroicBrawlServer.Services
         {
             var user = await _userService.GetByIdAsync(userId);
             var room = new Room(parameter.Name, parameter.Max, parameter.Map, user);
-            _rooms.Add(room);
+            Cache.Rooms.Add(room);
 
             return room;
         }
 
         public void AddUserToRoom(string connectionId, Guid userId, Guid roomId, Guid heroId, string initialState)
         {
-            var room = _rooms.First(x => x.Id == roomId);
+            var room = Cache.Rooms.First(x => x.Id == roomId);
 
             var spawningPoint = room.Map.GetSpawningPoint();
             room.GameState.Players.Add(new PlayerState(heroId,
@@ -71,7 +78,7 @@ namespace HeroicBrawlServer.Services
 
         public void RemoveUserFromRoom(string connectionId, Guid userId, Guid roomId)
         {
-            var room = _rooms.First(x => x.Id == roomId);
+            var room = Cache.Rooms.First(x => x.Id == roomId);
 
             var playerStateToRemove = GetPlayerState(roomId, connectionId);
             room.GameState.Players.Remove(playerStateToRemove);
@@ -79,23 +86,23 @@ namespace HeroicBrawlServer.Services
 
         public ICollection<Room> Rooms()
         {
-            return _rooms;
+            return Cache.Rooms;
         }
 
         public void Clean()
         {
-            foreach (var room in _rooms)
+            foreach (var room in Cache.Rooms)
             {
                 if (!room.GameState.Players.Any() && (DateTime.UtcNow - room.CreatedAt) > _emptyRoomTTL)
                 {
-                    _rooms.Remove(room);
+                    Cache.Rooms.Remove(room);
                 };
             }
         }
 
         private PlayerState GetPlayerState(Guid roomId, string connectionId)
         {
-            return _rooms.First(x => x.Id == roomId)
+            return Cache.Rooms.First(x => x.Id == roomId)
                          .GameState
                          .Players
                          .First(x => x.ConnectionId == connectionId);
@@ -135,7 +142,7 @@ namespace HeroicBrawlServer.Services
         public void RespawnPlayer(Guid roomId, string connectionId)
         {
             var playerState = GetPlayerState(roomId, connectionId);
-            var spawningPoint = _rooms.First(x => x.Id == roomId)
+            var spawningPoint = Cache.Rooms.First(x => x.Id == roomId)
                             .Map
                             .GetSpawningPoint();
 
