@@ -1,9 +1,7 @@
-﻿using HeroicBrawlServer.Services.Models.Enums;
-using HeroicBrawlServer.Services.Models.Rooms;
+﻿using HeroicBrawlServer.Services.Models.Rooms;
 using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Models;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HeroicBrawlServer.Services.Abstractions
@@ -46,12 +44,6 @@ namespace HeroicBrawlServer.Services.Abstractions
         void RemoveUserFromRoom(string connectionId, Guid userId, Guid roomId);
 
         /// <summary>
-        ///     Returns all room
-        /// </summary>
-        /// <returns></returns>
-        ICollection<Room> Rooms();
-
-        /// <summary>
         ///     Deletes empty rooms
         /// </summary>
         void Clean();
@@ -86,6 +78,6 @@ namespace HeroicBrawlServer.Services.Abstractions
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="connectionId"></param>
-        void RespawnPlayer(Guid roomId, string connectionId);
+        void RespawnPlayer(Guid roomId, string connectionId, int x, int y);
     }
 }

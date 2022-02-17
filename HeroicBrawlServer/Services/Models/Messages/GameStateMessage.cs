@@ -8,13 +8,18 @@ namespace HeroicBrawlServer.Services.Models.Messages
     public class GameStateMessage : BaseMessage
     {
 
-        public GameStateMessage(GameState gameState)
+        public GameStateMessage(GameState gameState, Maps map)
         {
             Players = gameState.Players.Select(x => new PlayerStateMessage(x))
                                        .ToList();
+            SpawningPoints = map.SpawningPoints.Select(x => new MapSpawningPointMessage(x))
+                                               .ToList();
         }
 
         [JsonProperty("p")]
         public ICollection<PlayerStateMessage> Players { get; }
+
+        [JsonProperty("sp")]
+        public ICollection<MapSpawningPointMessage> SpawningPoints { get; }
     }
 }

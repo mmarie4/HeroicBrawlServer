@@ -84,11 +84,6 @@ namespace HeroicBrawlServer.Services
             room.GameState.Players.Remove(playerStateToRemove);
         }
 
-        public ICollection<Room> Rooms()
-        {
-            return Cache.Rooms;
-        }
-
         public void Clean()
         {
             foreach (var room in Cache.Rooms)
@@ -139,18 +134,17 @@ namespace HeroicBrawlServer.Services
             }
         }
 
-        public void RespawnPlayer(Guid roomId, string connectionId)
+        public void RespawnPlayer(Guid roomId, string connectionId, int x, int y)
         {
             var playerState = GetPlayerState(roomId, connectionId);
-            var spawningPoint = Cache.Rooms.First(x => x.Id == roomId)
-                            .Map
-                            .GetSpawningPoint();
 
-            playerState.PositionX = spawningPoint.X;
-            playerState.PositionY = spawningPoint.Y;
+            playerState.PositionX = x;
+            playerState.PositionY = y;
             playerState.HP = _baseHP;
 
-            spawningPoint.Update();
+            Cache.Rooms.First(x => x.Id == roomId)
+                       .Map
+                       .UpdateSpawningPoint(x, y);
         }
 
     }

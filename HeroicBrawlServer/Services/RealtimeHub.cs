@@ -1,6 +1,7 @@
 ﻿using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Services.Models.Messages;
 using HeroicBrawlServer.Services.Models.Messages.PlayerActions;
+using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -86,7 +87,7 @@ namespace HeroicBrawlServer.Services
 
         public void Respawn(RespawnMessage request)
         {
-            _roomService.RespawnPlayer(request.RoomId, request.ConnectionId);
+            _roomService.RespawnPlayer(request.RoomId, request.ConnectionId, request.X, request.Y);
         }
 
         #endregion
@@ -101,7 +102,7 @@ namespace HeroicBrawlServer.Services
         /// <returns></returns>
         public async void Broadcast(object state)
         {
-            foreach (var room in _roomService.Rooms())
+            foreach (var room in Cache.Rooms)
             {
                 var stateMessage = new GameStateMessage(room.GameState);
                 await SendMessage(room.Id, stateMessage);
