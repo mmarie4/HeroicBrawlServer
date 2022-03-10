@@ -1,4 +1,5 @@
-﻿using HeroicBrawlServer.Services.Models.Rooms.Cache;
+﻿using HeroicBrawlServer.Services.Models.Maps;
+using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace HeroicBrawlServer.Services.Models.Messages
     public class GameStateMessage : BaseMessage
     {
 
-        public GameStateMessage(GameState gameState, Maps map)
+        public GameStateMessage(GameState gameState, Map map)
         {
             Players = gameState.Players.Select(x => new PlayerStateMessage(x))
                                        .ToList();
