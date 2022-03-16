@@ -107,8 +107,6 @@ namespace HeroicBrawlServer.Services
                 var stateMessage = new GameStateMessage(room.GameState, room.Map);
                 await SendMessage(room.Id, stateMessage);
             }
-
-            _roomService.Clean();
         }
 
         /// <summary>
