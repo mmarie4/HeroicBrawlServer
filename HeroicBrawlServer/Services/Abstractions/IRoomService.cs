@@ -44,11 +44,6 @@ namespace HeroicBrawlServer.Services.Abstractions
         void RemoveUserFromRoom(string connectionId, Guid userId, Guid roomId);
 
         /// <summary>
-        ///     Deletes empty rooms
-        /// </summary>
-        void Clean();
-
-        /// <summary>
         ///     Updates player state with new position
         /// </summary>
         /// <param name="roomId"></param>

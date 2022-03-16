@@ -12,7 +12,6 @@ namespace HeroicBrawlServer.Services
     public class RoomService : IRoomService
     {
         private readonly IUserService _userService;
-        private TimeSpan _emptyRoomTTL;
 
         // TODO: make it specific per hero ?
         private int _baseHP = 1000;
@@ -20,8 +19,6 @@ namespace HeroicBrawlServer.Services
         public RoomService(IUserService userService)
         {
             _userService = userService;
-
-            _emptyRoomTTL = new TimeSpan(0, 3, 0);
         }
 
         public PaginatedList<Room> GetPaginatedList(string? searchTerm, int limit, int offset)
@@ -55,7 +52,7 @@ namespace HeroicBrawlServer.Services
         {
             var user = await _userService.GetByIdAsync(userId);
             var room = new Room(parameter.Name, parameter.Max, parameter.Map, user);
-            Cache.Rooms.Add(room);
+            Cache.AddRoom(room);
 
             return room;
         }
@@ -82,17 +79,6 @@ namespace HeroicBrawlServer.Services
 
             var playerStateToRemove = GetPlayerState(roomId, connectionId);
             room.GameState.Players.Remove(playerStateToRemove);
-        }
-
-        public void Clean()
-        {
-            foreach (var room in Cache.Rooms)
-            {
-                if (!room.GameState.Players.Any() && (DateTime.UtcNow - room.CreatedAt) > _emptyRoomTTL)
-                {
-                    Cache.Rooms.Remove(room);
-                };
-            }
         }
 
         private PlayerState GetPlayerState(Guid roomId, string connectionId)
