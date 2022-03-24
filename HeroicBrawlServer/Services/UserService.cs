@@ -36,12 +36,8 @@ namespace HeroicBrawlServer.Services
             {
                 throw new Exception($"User not found with email {loginParameter.Email}");
             }
-            var passwordHash = HashUsingPbkdf2(loginParameter.Password, user.PasswordSalt);
 
-            if (user.PasswordHash != passwordHash)
-            {
-                throw new Exception($"Incorrect password");
-            }
+            CheckPassword(loginParameter.Password, user);
 
             var token = await Task.Run(() => GenerateToken(user));
 
@@ -80,7 +76,44 @@ namespace HeroicBrawlServer.Services
             return await _userRepository.GetByIdAsync(userId);
         }
 
+        public async Task<User> ChangePseudo(ChangePseudoParameter changePseudoParameter, Guid userId)
+        {
+            var user = await GetByIdAsync(userId);
+
+            user.Pseudo = changePseudoParameter.Pseudo;
+            user.Update(userId);
+
+            var result = await _userRepository.Update(user);
+            await _userRepository.SaveAsync();
+
+            return result;
+        }
+
+        public async Task<User> ChangePassword(ChangePasswordParameter changePasswordParameter, Guid userId)
+        {
+            var user = await GetByIdAsync(userId);
+
+            CheckPassword(changePasswordParameter.OldPassword, user);
+
+            user.PasswordHash = HashUsingPbkdf2(changePasswordParameter.NewPassword, user.PasswordSalt.ToString());
+
+            var result = await _userRepository.Update(user);
+            await _userRepository.SaveAsync();
+
+            return result;
+        }
+
         #region private functions
+        private void CheckPassword(string password, User user)
+        {
+            var passwordHash = HashUsingPbkdf2(password, user.PasswordSalt);
+
+            if (user.PasswordHash != passwordHash)
+            {
+                throw new Exception($"Incorrect password");
+            }
+        }
+
         /// <summary>
         ///     Hash a password
         /// </summary>

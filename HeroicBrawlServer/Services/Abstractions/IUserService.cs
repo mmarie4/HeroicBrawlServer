@@ -27,5 +27,21 @@ namespace HeroicBrawlServer.Services.Abstractions
         /// <param name="userId">ID of the user</param>
         /// <returns></returns>
         Task<User> GetByIdAsync(Guid userId);
+
+        /// <summary>
+        ///     Updates user's pseudo
+        /// </summary>
+        /// <param name="changePseudoParameter"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<User> ChangePseudo(ChangePseudoParameter changePseudoParameter, Guid userId);
+
+        /// <summary>
+        ///     Updates user's password
+        /// </summary>
+        /// <param name="changePasswordParameter"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<User> ChangePassword(ChangePasswordParameter changePasswordParameter, Guid userId);
     }
 }
