@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using HeroicBrawlServer.Controllers.Middleware;
 using HeroicBrawlServer.Controllers.Models.Rooms;
 using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Shared.Extensions;
@@ -11,6 +12,7 @@ namespace HeroicBrawlServer.Controllers
     [ApiController]
     [Route("api/rooms")]
     [Authorize]
+    [ExceptionFilter]
     public class RoomController : Controller
     {
         private readonly IRoomService _roomService;

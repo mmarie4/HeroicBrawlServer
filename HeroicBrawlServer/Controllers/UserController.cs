@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using HeroicBrawlServer.Controllers.Middleware;
 using HeroicBrawlServer.Controllers.Models.Users;
 using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Shared.Extensions;
@@ -11,6 +12,7 @@ namespace HeroicBrawlServer.Controllers
 {
     [ApiController]
     [Route("api/users")]
+    [ExceptionFilter]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
