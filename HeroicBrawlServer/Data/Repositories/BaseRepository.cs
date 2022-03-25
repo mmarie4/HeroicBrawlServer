@@ -67,6 +67,8 @@ namespace HeroicBrawlServer.Data.Repositories
         /// <returns>The entity added</returns>
         public async Task<TEntity> AddAsync(TEntity entity)
         {
+            entity.CreatedAt = DateTime.SpecifyKind(entity.CreatedAt, DateTimeKind.Utc);
+            entity.UpdatedAt = DateTime.SpecifyKind(entity.UpdatedAt, DateTimeKind.Utc);
             var result = await Entities.AddAsync(entity);
             return result.Entity;
         }
@@ -78,6 +80,8 @@ namespace HeroicBrawlServer.Data.Repositories
         /// <returns>The updated entity</returns>
         public Task<TEntity> Update(TEntity entity)
         {
+            entity.CreatedAt = DateTime.SpecifyKind(entity.CreatedAt, DateTimeKind.Utc);
+            entity.UpdatedAt = DateTime.SpecifyKind(entity.UpdatedAt, DateTimeKind.Utc);
             var result = Entities.Update(entity);
             return Task.FromResult(result.Entity);
         }

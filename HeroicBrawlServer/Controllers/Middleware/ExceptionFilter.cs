@@ -1,30 +1,23 @@
-﻿namespace HeroicBrawlServer.Controllers.Middleware
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+namespace HeroicBrawlServer.Controllers.Middleware
 {
-    using System.Net;
-    using System.Net.Http;
-    using System.Web.Http.Filters;
 
-    public class ExceptionFilter : ExceptionFilterAttribute
+    public class ExceptionFilter : Microsoft.AspNetCore.Mvc.Filters.ExceptionFilterAttribute
     {
-        public override void OnException(HttpActionExecutedContext actionExecutedContext)
+        public override void OnException(ExceptionContext context)
         {
-            var response = new HttpResponseMessage();
 
-            if (actionExecutedContext.Exception.InnerException == null)
+            var errorMessage = context.Exception.InnerException == null
+                               ? context.Exception.Message
+                               : $"{context.Exception.Message} - {context.Exception.InnerException.Message}";
+
+            
+            context.Result = new ObjectResult(new ErrorResponse(errorMessage))
             {
-                response.Content = new StringContent(actionExecutedContext.Exception.Message);
-                response.StatusCode = HttpStatusCode.BadRequest;
-            }
-            else
-            {
-                response.Content = new StringContent($"{actionExecutedContext.Exception.Message} - {actionExecutedContext.Exception.InnerException.Message}");
-                response.StatusCode = HttpStatusCode.BadRequest;
-            }
-
-            response.Content = new StringContent("Unknown error");
-            response.StatusCode = HttpStatusCode.InternalServerError;
-
-            actionExecutedContext.Response = response;
+                StatusCode = 500,
+            };
         }
     }
 }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using HeroicBrawlServer.Controllers.Middleware;
 using HeroicBrawlServer.Data.Repositories;
 using HeroicBrawlServer.Data.Repositories.Abstractions;
 using HeroicBrawlServer.Services;
@@ -28,7 +29,6 @@ namespace HeroicBrawlServer
 
         public Startup(IWebHostEnvironment env)
         {
-	    Console.Write("------------------------> ContentRootPath: " + env.ContentRootPath);
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile($"appsettings.json", optional: true, reloadOnChange: true)
@@ -42,8 +42,10 @@ namespace HeroicBrawlServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<ExceptionFilter>();
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HeroicBrawlServer", Version = "v1" });

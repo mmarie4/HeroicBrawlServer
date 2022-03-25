@@ -21,7 +21,11 @@ namespace HeroicBrawlServer
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    // Production
                     webBuilder.UseStartup<Startup>().UseUrls("http://0.0.0.0:5001");
+
+                    // Development
+                    //webBuilder.UseStartup<Startup>();
                 });
     }
 }

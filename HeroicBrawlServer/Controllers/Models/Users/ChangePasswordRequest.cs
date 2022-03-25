@@ -1,11 +1,15 @@
 ﻿using HeroicBrawlServer.Services.Models.Users;
+using System.ComponentModel.DataAnnotations;
 
 namespace HeroicBrawlServer.Controllers.Models.Users
 {
     public class ChangePasswordRequest
     {
+        [Required]
         public string OldPassword { get; set; }
+        [Required]
         public string NewPassword { get; set; }
+        [Required]
         public string NewPassword2 { get; set; }
 
 

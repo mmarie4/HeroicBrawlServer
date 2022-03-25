@@ -1,11 +1,15 @@
 ﻿using HeroicBrawlServer.Services.Models.Users;
+using System.ComponentModel.DataAnnotations;
 
 namespace HeroicBrawlServer.Controllers.Models.Users
 {
     public class SignUpRequest
     {
+        [Required]
         public string Email { get; set; }
+        [Required]
         public string Pseudo { get; set; }
+        [Required]
         public string Password { get; set; }
 
         /// <summary>

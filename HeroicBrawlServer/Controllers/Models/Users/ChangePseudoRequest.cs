@@ -1,9 +1,11 @@
 ﻿using HeroicBrawlServer.Services.Models.Users;
+using System.ComponentModel.DataAnnotations;
 
 namespace HeroicBrawlServer.Controllers.Models.Users
 {
     public class ChangePseudoRequest
     {
+        [Required]
         public string Pseudo { get; set; }
 
 

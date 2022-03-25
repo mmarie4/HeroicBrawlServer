@@ -1,18 +1,16 @@
-﻿using System.Threading.Tasks;
-using HeroicBrawlServer.Controllers.Middleware;
-using HeroicBrawlServer.Controllers.Models.Rooms;
+﻿using HeroicBrawlServer.Controllers.Models.Rooms;
 using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Shared.Extensions;
 using HeroicBrawlServer.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace HeroicBrawlServer.Controllers
 {
     [ApiController]
     [Route("api/rooms")]
     [Authorize]
-    [ExceptionFilter]
     public class RoomController : Controller
     {
         private readonly IRoomService _roomService;
