@@ -2,6 +2,7 @@
 using HeroicBrawlServer.Services.Models.Rooms;
 using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Models;
+using HeroicBrawlServer.Shared.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,12 @@ namespace HeroicBrawlServer.Services
     {
         private readonly IUserService _userService;
 
-        // TODO: make it specific per hero ?
-        private int _baseHP = 1000;
+        private HeroesSettings _heroesSettings;
 
         public RoomService(IUserService userService)
         {
             _userService = userService;
+            _heroesSettings = new HeroesSettings();
         }
 
         public PaginatedList<Room> GetPaginatedList(string? searchTerm, int limit, int offset)
@@ -67,7 +68,7 @@ namespace HeroicBrawlServer.Services
                                                        connectionId,
                                                        spawningPoint.X,
                                                        spawningPoint.Y,
-                                                       _baseHP,
+                                                       _heroesSettings.Get(heroId).BaseHp,
                                                        initialState));
 
             spawningPoint.Update();
@@ -126,7 +127,7 @@ namespace HeroicBrawlServer.Services
 
             playerState.PositionX = x;
             playerState.PositionY = y;
-            playerState.HP = _baseHP;
+            playerState.HP = _heroesSettings.Get(playerState.HeroId).BaseHp;
 
             Cache.Rooms.First(x => x.Id == roomId)
                        .Map
