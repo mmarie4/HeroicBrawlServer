@@ -85,6 +85,11 @@ namespace HeroicBrawlServer.Services
             _roomService.TakeDamagePlayer(request.RoomId, request.ConnectionId, request.DamageTaken, request.FromConnectionId);
         }
 
+        public void Die(DieMessage request)
+        {
+            _roomService.TakeDamagePlayer(request.RoomId, request.ConnectionId, request.FromConnectionId);
+        }
+
         public void Respawn(RespawnMessage request)
         {
             _roomService.RespawnPlayer(request.RoomId, request.ConnectionId, request.X, request.Y);

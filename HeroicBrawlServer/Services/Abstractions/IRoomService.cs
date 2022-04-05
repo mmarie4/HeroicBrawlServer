@@ -69,6 +69,14 @@ namespace HeroicBrawlServer.Services.Abstractions
         void TakeDamagePlayer(Guid roomId, string connectionId, int damageTaken, string fromConnectionId);
 
         /// <summary>
+        ///     Updates player states death and kill counts
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="connectionId"></param>
+        /// <param name="fromConnectionId"></param>
+        void Die(Guid roomId, string connectionId, string fromConnectionId);
+
+        /// <summary>
         ///     Resets player HP and move to spawning point
         /// </summary>
         /// <param name="roomId"></param>

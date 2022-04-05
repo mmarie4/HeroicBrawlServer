@@ -16,13 +16,13 @@ namespace HeroicBrawlServer.Shared.Settings
         }
     }
 
-    public class HeroesSettings
+    public static class HeroesSettings
     {
-        public ICollection<HeroSettings> Heroes = new List<HeroSettings>()
+        public static ICollection<HeroSettings> Heroes = new List<HeroSettings>()
         {
             new HeroSettings(new Guid("03fa247c-7c24-453d-8efa-ff0a0e605279"), 1000)
         };
 
-        public HeroSettings Get(Guid id) => Heroes.First(h => h.Id == id);
+        public static HeroSettings Get(Guid id) => Heroes.First(h => h.Id == id);
     }
 }
