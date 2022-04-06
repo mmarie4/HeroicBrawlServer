@@ -1,4 +1,7 @@
-﻿using HeroicBrawlServer.Data.Entities;
+﻿using HeroicBrawlServer.Controllers.Models.Rooms;
+using HeroicBrawlServer.Data.Entities;
+using HeroicBrawlServer.Services.Models.Rooms.Cache;
+using HeroicBrawlServer.Shared.Models;
 
 namespace HeroicBrawlServer.Controllers.Models.Users
 {

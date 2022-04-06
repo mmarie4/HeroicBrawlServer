@@ -87,7 +87,7 @@ namespace HeroicBrawlServer.Services
 
         public void Die(DieMessage request)
         {
-            _roomService.TakeDamagePlayer(request.RoomId, request.ConnectionId, request.FromConnectionId);
+            _roomService.Die(request.RoomId, request.ConnectionId, request.FromConnectionId);
         }
 
         public void Respawn(RespawnMessage request)

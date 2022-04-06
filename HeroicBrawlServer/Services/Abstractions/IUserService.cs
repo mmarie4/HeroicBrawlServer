@@ -1,6 +1,7 @@
 ﻿using HeroicBrawlServer.Data.Entities;
 using HeroicBrawlServer.Services.Models.Users;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HeroicBrawlServer.Services.Abstractions
@@ -43,5 +44,12 @@ namespace HeroicBrawlServer.Services.Abstractions
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<User> ChangePassword(ChangePasswordParameter changePasswordParameter, Guid userId);
+
+        /// <summary>
+        ///     Returns all users by their ids
+        /// </summary>
+        /// <param name="userIds"></param>
+        /// <returns></returns>
+        Task<ICollection<User>> GetUsersByIds(ICollection<Guid> userIds);
     }
 }

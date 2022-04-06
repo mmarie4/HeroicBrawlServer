@@ -21,6 +21,8 @@ namespace HeroicBrawlServer.Services.Models.Rooms.Cache
 
         public GameState GameState { get; }
 
+        public ICollection<Guid> BannedPlayers { get; set; }
+
         public Room(string name, int max, Map map, User createdBy)
         {
             Id = Guid.NewGuid();
@@ -30,6 +32,7 @@ namespace HeroicBrawlServer.Services.Models.Rooms.Cache
             CreatedAt = DateTime.UtcNow;
             CreatedBy = createdBy;
             GameState = new GameState();
+            BannedPlayers = new List<Guid>();
         }
     }
 }

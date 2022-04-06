@@ -103,6 +103,11 @@ namespace HeroicBrawlServer.Services
             return result;
         }
 
+        public async Task<ICollection<User>> GetUsersByIds(ICollection<Guid> userIds)
+        {
+            return await _userRepository.GetByIds(userIds);
+        }
+
         #region private functions
         private void CheckPassword(string password, User user)
         {

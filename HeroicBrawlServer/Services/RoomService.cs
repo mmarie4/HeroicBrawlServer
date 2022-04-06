@@ -1,4 +1,5 @@
-﻿using HeroicBrawlServer.Services.Abstractions;
+﻿using HeroicBrawlServer.Data.Entities;
+using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Services.Models.Rooms;
 using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Models;
@@ -26,9 +27,9 @@ namespace HeroicBrawlServer.Services
             if (searchTerm != null && !string.IsNullOrWhiteSpace(searchTerm))
             {
                 rooms = Cache.Rooms.Where(x => x.Name.ToLower().Contains(searchTerm.ToLower()))
-                              .Take(limit)
-                              .Skip(offset)
-                              .ToList();
+                                   .Take(limit)
+                                   .Skip(offset)
+                                   .ToList();
             }
             else
             {
@@ -57,7 +58,7 @@ namespace HeroicBrawlServer.Services
 
         public void AddUserToRoom(string connectionId, Guid userId, Guid roomId, Guid heroId, string initialState)
         {
-            var room = Cache.Rooms.First(x => x.Id == roomId);
+            var room = GetRoom(roomId);
 
             var spawningPoint = room.Map.GetSpawningPoint();
             room.GameState.Players.Add(new PlayerState(heroId,
@@ -73,10 +74,33 @@ namespace HeroicBrawlServer.Services
 
         public void RemoveUserFromRoom(string connectionId, Guid userId, Guid roomId)
         {
-            var room = Cache.Rooms.First(x => x.Id == roomId);
+            var room = GetRoom(roomId);
 
             var playerStateToRemove = GetPlayerState(roomId, connectionId);
             room.GameState.Players.Remove(playerStateToRemove);
+        }
+
+        public async Task<PaginatedList<User>> GetPaginatedBannedPlayers(Guid roomId, int limit, int offset)
+        {
+            var room = GetRoom(roomId);
+
+            var userIds = room.BannedPlayers.Take(limit)
+                                            .Skip(offset)
+                                            .ToList();
+
+            return new PaginatedList<User>()
+            {
+                Values = await _userService.GetUsersByIds(userIds),
+                Limit = limit,
+                Offset = offset,
+                Total = room.BannedPlayers.Count
+            };
+        }
+
+        public async Task UpdateBannedPlayerList(Guid roomId, ICollection<Guid> userIds)
+        {
+            var room = GetRoom(roomId);
+            room.BannedPlayers = userIds;
         }
 
         private PlayerState GetPlayerState(Guid roomId, string connectionId)
@@ -130,6 +154,16 @@ namespace HeroicBrawlServer.Services
             Cache.Rooms.First(x => x.Id == roomId)
                        .Map
                        .UpdateSpawningPoint(x, y);
+        }
+
+        private Room GetRoom(Guid roomId)
+        {
+            var room = Cache.Rooms.FirstOrDefault(x => x.Id == roomId);
+            if (room == null)
+            {
+                throw new Exception($"Room {roomId} not found");
+            }
+            return room;
         }
 
     }

@@ -1,7 +1,9 @@
-﻿using HeroicBrawlServer.Services.Models.Rooms;
+﻿using HeroicBrawlServer.Data.Entities;
+using HeroicBrawlServer.Services.Models.Rooms;
 using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HeroicBrawlServer.Services.Abstractions
@@ -42,6 +44,23 @@ namespace HeroicBrawlServer.Services.Abstractions
         /// <param name="roomId"></param>
         /// <returns></returns>
         void RemoveUserFromRoom(string connectionId, Guid userId, Guid roomId);
+
+        /// <summary>
+        ///     Returns paginated list of banned players of a room
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="limit"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        Task<PaginatedList<User>> GetPaginatedBannedPlayers(Guid roomId, int limit, int offset);
+
+        /// <summary>
+        ///     Updates the list of banned players of a room
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="userIds"></param>
+        /// <returns></returns>
+        Task UpdateBannedPlayerList(Guid roomId, ICollection<Guid> userIds);
 
         /// <summary>
         ///     Updates player state with new position
