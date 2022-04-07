@@ -18,7 +18,6 @@
   <ItemGroup>
     <Folder Include="Services\Abstractions\" />
     <Folder Include="Shared\Models\" />
-    <Folder Include="Shared\Extensions\" />
   </ItemGroup>
 
   <ItemGroup>

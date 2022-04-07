@@ -103,6 +103,14 @@ namespace HeroicBrawlServer.Services
             room.BannedPlayers = userIds;
         }
 
+        public void RemovePlayerFromRooms(string connectionId)
+        {
+            foreach (var room in Cache.Rooms)
+            {
+                room.GameState.Players.RemoveAll(p => p.ConnectionId == connectionId);
+            }
+        }
+
         private PlayerState GetPlayerState(Guid roomId, string connectionId)
         {
             return Cache.Rooms.First(x => x.Id == roomId)

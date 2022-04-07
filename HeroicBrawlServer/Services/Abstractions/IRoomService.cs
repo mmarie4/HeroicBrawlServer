@@ -63,6 +63,12 @@ namespace HeroicBrawlServer.Services.Abstractions
         Task UpdateBannedPlayerList(Guid roomId, ICollection<Guid> userIds);
 
         /// <summary>
+        ///     Remove players from all rooms where he was connected
+        /// </summary>
+        /// <param name="connectionId"></param>
+        void RemovePlayerFromRooms(string connectionId);
+
+        /// <summary>
         ///     Updates player state with new position
         /// </summary>
         /// <param name="roomId"></param>

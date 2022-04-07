@@ -1,11 +1,9 @@
 ﻿using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Services.Models.Messages;
 using HeroicBrawlServer.Services.Models.Messages.PlayerActions;
-using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace HeroicBrawlServer.Services
@@ -19,9 +17,6 @@ namespace HeroicBrawlServer.Services
         private readonly IRoomService _roomService;
         private readonly IUserService _userService;
 
-        private TimeSpan TickDelay = TimeSpan.FromMilliseconds(33);
-        private Timer _broadcastLoop;
-
         /// <summary>
         ///     RealtimeHub constructor
         /// </summary>
@@ -30,8 +25,19 @@ namespace HeroicBrawlServer.Services
         {
             _roomService = roomService;
             _userService = userService;
+        }
 
-            _broadcastLoop = new Timer(Broadcast, null, TickDelay, TickDelay);
+        /// <summary>
+        ///     Handles player disconnected to remove from the rooms
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            var connectionId = Context.ConnectionId;
+            _roomService.RemovePlayerFromRooms(connectionId);
+
+            return base.OnDisconnectedAsync(exception);
         }
 
         #region SignalR entry points
@@ -102,31 +108,15 @@ namespace HeroicBrawlServer.Services
         #region private functions
 
         /// <summary>
-        ///     For each room, broadcast message for game state
-        /// </summary>
-        /// <returns></returns>
-        public async void Broadcast(object state)
-        {
-            foreach (var room in Cache.Rooms)
-            {
-                var stateMessage = new GameStateMessage(room.GameState, room.Map);
-                await SendMessage(room.Id, stateMessage);
-            }
-        }
-
-        /// <summary>
         ///     Sends a message to all users in the room
         /// </summary>
         /// <param name="roomId">id of the room</param>
         /// <param name="message">message to send</param>
         /// <returns></returns>
-        private async Task SendMessage(Guid roomId, string message)
-        {
-            await Clients.Group(roomId.ToString()).SendAsync(message);
-        }
         private async Task SendMessage(Guid roomId, BaseMessage message)
         {
-            await SendMessage(roomId, message.ToString());
+            await Clients.Group(roomId.ToString())
+                         .SendAsync(message.ToString());
         }
 
         #endregion
