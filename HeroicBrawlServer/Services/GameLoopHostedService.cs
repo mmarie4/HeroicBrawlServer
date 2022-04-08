@@ -47,7 +47,7 @@ namespace HeroicBrawlServer.Services
             foreach (var room in Cache.Rooms)
             {
                 var stateMessage = new GameStateMessage(room.GameState, room.Map);
-                await _hubContext.SendToRoom(room.Id, stateMessage);
+                await _hubContext.Clients.SendToRoom(room.Id, stateMessage);
             }
         }
     }

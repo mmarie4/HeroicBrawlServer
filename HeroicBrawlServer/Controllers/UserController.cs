@@ -44,6 +44,8 @@ namespace HeroicBrawlServer.Controllers
         [HttpPost("sign-up")]
         public async Task<UserResponse> SignUp([FromBody] SignUpRequest signUpRequest)
         {
+            signUpRequest.Validate();
+
             var parameter = SignUpRequest.ToParameter(signUpRequest);
             var (user, token) = await _userService.SignUpAsync(parameter);
 
@@ -71,10 +73,7 @@ namespace HeroicBrawlServer.Controllers
         [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest)
         {
-            if (changePasswordRequest.NewPassword != changePasswordRequest.NewPassword2)
-            {
-                throw new Exception("Passwords don't match");
-            }
+            changePasswordRequest.Validate();
 
             var userId = HttpContext.User.ExtractUserId();
 

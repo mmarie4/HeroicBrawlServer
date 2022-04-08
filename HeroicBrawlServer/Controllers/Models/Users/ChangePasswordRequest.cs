@@ -1,4 +1,5 @@
 ﻿using HeroicBrawlServer.Services.Models.Users;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace HeroicBrawlServer.Controllers.Models.Users
@@ -25,6 +26,18 @@ namespace HeroicBrawlServer.Controllers.Models.Users
                 OldPassword = request.OldPassword,
                 NewPassword = request.NewPassword
             };
+        }
+
+        /// <summary>
+        ///     Validates request
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        public void Validate()
+        {
+            if (NewPassword != NewPassword2)
+            {
+                throw new Exception("Passwords don't match");
+            }
         }
     }
 }

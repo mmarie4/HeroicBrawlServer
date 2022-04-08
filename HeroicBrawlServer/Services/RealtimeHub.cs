@@ -115,8 +115,7 @@ namespace HeroicBrawlServer.Services
         /// <returns></returns>
         private async Task SendMessage(Guid roomId, BaseMessage message)
         {
-            await Clients.Group(roomId.ToString())
-                         .SendAsync(message.ToString());
+            await ((IHubClients)Clients).SendToRoom(roomId, message);
         }
 
         #endregion
