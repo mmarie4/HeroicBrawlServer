@@ -6,7 +6,7 @@ echo OK.
 echo -e "\n\n[3/5] ********************* Build release ***************************\n\n"
 dotnet publish -c Release
 echo -e "\n\n[4/5] ********************* Backup logs *****************************\n\n"
-now=$(date +"%m-%d-%Y")
+now=$(date +"%Y-%m-%d")
 mv nohup.out ./logs/logs-$now.txt
 echo -e "\n\n[5/5] ********************* Launch app ******************************\n\n"
 nohup ./HeroicBrawlServer/bin/Release/net6.0/HeroicBrawlServer &
