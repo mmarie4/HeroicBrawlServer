@@ -19,6 +19,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 using Serilog.Configuration;
 
@@ -43,9 +45,18 @@ namespace HeroicBrawlServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers(options =>
-            {
-                options.Filters.Add<ExceptionFilter>();
-            });
+                    {
+                        options.Filters.Add<ExceptionFilter>();
+                    })
+                    .AddNewtonsoftJson(options =>
+                     {
+                         options.SerializerSettings.ContractResolver = new DefaultContractResolver
+                         {
+                             NamingStrategy = new SnakeCaseNamingStrategy()
+                         };
+                         options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
+                         options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                     });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HeroicBrawlServer", Version = "v1" });
