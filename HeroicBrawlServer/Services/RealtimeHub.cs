@@ -49,14 +49,14 @@ namespace HeroicBrawlServer.Services
         /// <param name="heroId">Id of hero</param>
         /// <param name="bearerToken">Access token containing the user id</param>
         /// <returns></returns>
-        public async Task JoinRoom(Guid roomId, Guid heroId, string initialState, string bearerToken)
+        public async Task JoinRoom(Guid roomId, string heroName, string initialState, string bearerToken)
         {
             var userId = bearerToken.ExtractUserId();
             var user = await _userService.GetByIdAsync(userId);
 
-            _roomService.AddUserToRoom(Context.ConnectionId, userId, roomId, heroId, initialState);
+            _roomService.AddUserToRoom(Context.ConnectionId, userId, roomId, heroName, initialState);
             await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
-            await SendMessage(roomId, new UserJoinedRoomMessage(userId, user.Pseudo, heroId));
+            await SendMessage(roomId, new UserJoinedRoomMessage(userId, user.Pseudo, heroName));
         }
 
         /// <summary>

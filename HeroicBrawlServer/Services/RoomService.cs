@@ -3,7 +3,6 @@ using HeroicBrawlServer.Services.Abstractions;
 using HeroicBrawlServer.Services.Models.Rooms;
 using HeroicBrawlServer.Services.Models.Rooms.Cache;
 using HeroicBrawlServer.Shared.Models;
-using HeroicBrawlServer.Shared.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +13,13 @@ namespace HeroicBrawlServer.Services
     public class RoomService : IRoomService
     {
         private readonly IUserService _userService;
+        private readonly ISettingsService _settingsService;
 
-        public RoomService(IUserService userService)
+        public RoomService(IUserService userService,
+                           ISettingsService settingsService)
         {
             _userService = userService;
+            _settingsService = settingsService;
         }
 
         public PaginatedList<Room> GetPaginatedList(string? searchTerm, int limit, int offset)
@@ -56,17 +58,17 @@ namespace HeroicBrawlServer.Services
             return room;
         }
 
-        public void AddUserToRoom(string connectionId, Guid userId, Guid roomId, Guid heroId, string initialState)
+        public void AddUserToRoom(string connectionId, Guid userId, Guid roomId, string heroName, string initialState)
         {
             var room = GetRoom(roomId);
 
             var spawningPoint = room.Map.GetSpawningPoint();
-            room.GameState.Players.Add(new PlayerState(heroId,
+            room.GameState.Players.Add(new PlayerState(heroName,
                                                        true,
                                                        connectionId,
                                                        spawningPoint.X,
                                                        spawningPoint.Y,
-                                                       HeroesSettings.Get(heroId).BaseHp,
+                                                       _settingsService.GetHeroSettings(heroName).BaseHp,
                                                        initialState));
 
             spawningPoint.Update();
@@ -157,7 +159,7 @@ namespace HeroicBrawlServer.Services
 
             playerState.PositionX = x;
             playerState.PositionY = y;
-            playerState.HP = HeroesSettings.Get(playerState.HeroId).BaseHp;
+            playerState.HP = _settingsService.GetHeroSettings(playerState.HeroName).BaseHp;
 
             Cache.Rooms.First(x => x.Id == roomId)
                        .Map

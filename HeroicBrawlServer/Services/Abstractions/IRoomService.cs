@@ -34,7 +34,7 @@ namespace HeroicBrawlServer.Services.Abstractions
         /// <param name="userId"></param>
         /// <param name="roomId"></param>
         /// <returns></returns>
-        void AddUserToRoom(string connectionId, Guid userId, Guid roomId, Guid heroId, string initialState);
+        void AddUserToRoom(string connectionId, Guid userId, Guid roomId, string heroName, string initialState);
 
         /// <summary>
         ///     Removes a user from a room

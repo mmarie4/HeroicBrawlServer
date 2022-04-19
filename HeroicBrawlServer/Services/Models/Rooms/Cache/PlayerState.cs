@@ -5,7 +5,7 @@ namespace HeroicBrawlServer.Services.Models.Rooms.Cache
     public class PlayerState
     {
 
-        public PlayerState(Guid heroId,
+        public PlayerState(string heroName,
                            bool isAlive,
                            string connectionId,
                            int x,
@@ -13,7 +13,7 @@ namespace HeroicBrawlServer.Services.Models.Rooms.Cache
                            int hp,
                            string state)
         {
-            HeroId = heroId;
+            HeroName = heroName;
             IsAlive = isAlive;
             ConnectionId = connectionId;
             PositionX = x;
@@ -24,7 +24,7 @@ namespace HeroicBrawlServer.Services.Models.Rooms.Cache
             KillCount = 0;
         }
 
-        public Guid HeroId { get; set; }
+        public string HeroName { get; set; }
 
         public bool IsAlive { get; set; }
 

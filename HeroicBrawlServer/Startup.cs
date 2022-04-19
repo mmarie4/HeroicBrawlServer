@@ -103,6 +103,7 @@ namespace HeroicBrawlServer
             // Services
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISettingsService, SettingsService>();
 
             // Hosted Services
             services.AddHostedService<CleanerHostedService>();

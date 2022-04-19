@@ -14,12 +14,12 @@ namespace HeroicBrawlServer.Services.Models.Messages
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="pseudo"></param>
-        /// <param name="heroId"></param>
-        public UserJoinedRoomMessage(Guid userId, string pseudo, Guid heroId)
+        /// <param name="heroName"></param>
+        public UserJoinedRoomMessage(Guid userId, string pseudo, string heroName)
         {
             UserId = userId;
             Pseudo = pseudo;
-            HeroId = heroId;
+            HeroName = heroName;
         }
 
         /// <summary>
@@ -35,6 +35,6 @@ namespace HeroicBrawlServer.Services.Models.Messages
         /// <summary>
         ///     ID of the hero the user is playing
         /// </summary>
-        public Guid HeroId { get; }
+        public string HeroName { get; }
     }
 }
