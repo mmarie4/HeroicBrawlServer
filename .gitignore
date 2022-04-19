@@ -1,5 +1,6 @@
 # prod appsettings
 .appsettings.json
+nohup.out
 
 # globs
 Makefile.in
