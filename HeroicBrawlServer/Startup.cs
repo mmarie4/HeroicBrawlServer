@@ -65,7 +65,19 @@ namespace HeroicBrawlServer
                 c.IncludeXmlComments(xmlPath);
             });
 
+            // Add SignalR
             services.AddSignalR();
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyHeader()
+                               .WithMethods("GET", "POST")
+                               .AllowCredentials();
+                    });
+            });
 
 
             // Configure JWT authentication.
