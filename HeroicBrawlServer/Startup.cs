@@ -74,7 +74,7 @@ namespace HeroicBrawlServer
                     {
                         builder.AllowAnyOrigin()
                                .AllowAnyHeader()
-                               .WithMethods("GET", "POST")
+                               .AllowAnyMethod()
                                .AllowCredentials();
                     });
             });
