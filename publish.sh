@@ -10,3 +10,4 @@ now=$(date +"%Y-%m-%d")
 mv nohup.out ./logs/logs-$now.txt
 echo -e "\n\n[5/5] ********************* Launch app ******************************\n\n"
 nohup ./HeroicBrawlServer/bin/Release/net6.0/HeroicBrawlServer &
+echo -e "Publish completed"
