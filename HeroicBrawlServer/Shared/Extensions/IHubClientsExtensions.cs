@@ -1,5 +1,4 @@
-﻿using HeroicBrawlServer.Services;
-using HeroicBrawlServer.Services.Models.Messages;
+﻿using HeroicBrawlServer.Services.Models.Messages;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
